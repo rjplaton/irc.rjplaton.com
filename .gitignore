@@ -1,0 +1,21 @@
+# macOS
+.DS_Store
+._*
+.AppleDouble
+.LSOverride
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Workspace-only notes (not for the public repo)
+PROJECT_NOTES.md
+
+# Logs
+*.log
+
+# OS / temp
+Thumbs.db
+*~

@@ -1,0 +1,3319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>#rjplaton :: 0day mp3z &amp; releases :: irc.rjplaton.com</title>
+<meta name="description" content="Personal site of rjplaton, served from #rjplaton on irc.rjplaton.com. Type /help for commands.">
+<style>
+  /*
+    EDIT-ME-LATER:
+    This is rjplaton.com. Personal project. Personal GitHub only (placeholder: rjplaton).
+    See PROJECT_NOTES.md in the project folder.
+    All <!-- TODO --> markers below are spots to drop in real bio / project / contact info.
+  */
+
+  :root {
+    --mirc-bg:        #000000;
+    --mirc-text:      #ffffff;
+    --mirc-system:    #009393; /* teal */
+    --mirc-action:    #9c009c; /* purple */
+    --mirc-op:        #009300; /* green */
+    --mirc-voice:     #00fc00; /* light green */
+    --mirc-yellow:    #ffff00;
+    --mirc-orange:    #fc7f00;
+    --mirc-red:       #ff0000;
+    --mirc-darkred:   #7f0000;
+    --mirc-pink:      #ff00ff;
+    --mirc-lightblue: #00ffff;
+    --mirc-blue:      #0000fc;
+    --mirc-grey:      #7f7f7f;
+    --mirc-lightgrey: #d2d2d2;
+    --win98-face:     #c3c3c3;
+    --win98-shadow:   #818181;
+    --win98-dark:     #000000;
+    --win98-light:    #ffffff;
+    --win98-titleon:  #00007f;
+    --win98-titletx:  #ffffff;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; height: 100%; }
+  body {
+    /* Win98 default desktop background — solid teal */
+    background-color: #008080;
+    /* Faint "dithered" noise pattern for that 8-bit-color-depth feel */
+    background-image:
+      repeating-linear-gradient(45deg,
+        rgba(255,255,255,0.015) 0 1px,
+        transparent 1px 4px),
+      repeating-linear-gradient(-45deg,
+        rgba(0,0,0,0.025) 0 1px,
+        transparent 1px 4px);
+    font-family: "Fixedsys", "Lucida Console", "Consolas", "Courier New", monospace;
+    color: var(--mirc-text);
+    font-size: 14px;
+    line-height: 1.35;
+    overflow: hidden;
+    -webkit-font-smoothing: none;
+    image-rendering: pixelated;
+    cursor: default;
+  }
+
+  /* Subtle CRT vibe but keep purist core */
+  body::before {
+    content: "";
+    position: fixed; inset: 0;
+    background: repeating-linear-gradient(0deg,
+      rgba(255,255,255,0.02) 0px,
+      rgba(255,255,255,0.02) 1px,
+      transparent 1px,
+      transparent 3px);
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* ---------- mIRC Window Chrome (Win98) ---------- */
+  .mirc-window {
+    position: absolute;
+    top: 16px; left: 16px; right: 16px; bottom: 32px;
+    z-index: 5; /* above desktop icons (z:1), below floating mini-windows (z:50) */
+    background: var(--win98-face);
+    border-top: 2px solid var(--win98-light);
+    border-left: 2px solid var(--win98-light);
+    border-right: 2px solid var(--win98-dark);
+    border-bottom: 2px solid var(--win98-dark);
+    box-shadow:
+      inset 1px 1px 0 #dfdfdf,
+      inset -1px -1px 0 var(--win98-shadow),
+      4px 4px 0 rgba(0,0,0,0.4);
+    display: flex;
+    flex-direction: column;
+    min-width: 640px;
+  }
+
+  .titlebar {
+    background: linear-gradient(90deg, #000080 0%, #1084d0 100%);
+    color: var(--win98-titletx);
+    font-family: "MS Sans Serif", Tahoma, sans-serif;
+    font-weight: bold;
+    font-size: 12px;
+    padding: 3px 4px 3px 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    user-select: none;
+  }
+  .titlebar .icon {
+    width: 16px; height: 16px;
+    display: inline-block;
+    background: var(--mirc-yellow);
+    border: 1px solid #000;
+    box-shadow: inset -2px -2px 0 #aa8800;
+    flex-shrink: 0;
+    position: relative;
+  }
+  .titlebar .icon::after {
+    content: "#";
+    position: absolute; inset: 0;
+    color: #000; font-size: 11px; font-weight: bold;
+    text-align: center; line-height: 14px;
+    font-family: "Lucida Console", monospace;
+  }
+  .titlebar .title-text { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .titlebar .controls { display: flex; gap: 2px; }
+  .titlebar .ctrl-btn {
+    width: 16px; height: 14px;
+    background: var(--win98-face);
+    border-top: 1px solid var(--win98-light);
+    border-left: 1px solid var(--win98-light);
+    border-right: 1px solid var(--win98-dark);
+    border-bottom: 1px solid var(--win98-dark);
+    color: #000;
+    font-family: "Marlett", sans-serif;
+    font-size: 10px;
+    line-height: 12px;
+    text-align: center;
+    cursor: pointer;
+  }
+  .titlebar .ctrl-btn:active {
+    border-top: 1px solid var(--win98-dark);
+    border-left: 1px solid var(--win98-dark);
+    border-right: 1px solid var(--win98-light);
+    border-bottom: 1px solid var(--win98-light);
+  }
+
+  .menubar {
+    background: var(--win98-face);
+    border-bottom: 1px solid var(--win98-shadow);
+    padding: 2px 4px;
+    display: flex;
+    gap: 0;
+    font-family: "MS Sans Serif", Tahoma, sans-serif;
+    font-size: 11px;
+    color: #000;
+    user-select: none;
+  }
+  .menubar span {
+    padding: 2px 6px;
+    cursor: default;
+  }
+  .menubar span:hover { background: #000080; color: #fff; }
+  .menubar span u { text-decoration: underline; }
+
+  .toolbar {
+    background: var(--win98-face);
+    border-bottom: 1px solid var(--win98-shadow);
+    padding: 3px 4px;
+    display: flex;
+    gap: 2px;
+    align-items: center;
+  }
+  .toolbar .tb-btn {
+    width: 22px; height: 22px;
+    background: var(--win98-face);
+    border-top: 1px solid var(--win98-light);
+    border-left: 1px solid var(--win98-light);
+    border-right: 1px solid var(--win98-dark);
+    border-bottom: 1px solid var(--win98-dark);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Lucida Console", monospace;
+    font-size: 10px;
+    color: #000;
+    cursor: pointer;
+  }
+  .toolbar .tb-sep { width: 1px; height: 18px; background: var(--win98-shadow); margin: 0 4px; }
+
+  .tabs {
+    background: var(--win98-face);
+    padding: 2px 4px 0 4px;
+    display: flex;
+    gap: 2px;
+    border-bottom: 1px solid var(--win98-shadow);
+    font-family: "MS Sans Serif", Tahoma, sans-serif;
+    font-size: 11px;
+  }
+  .tab {
+    padding: 3px 10px;
+    background: var(--win98-face);
+    border-top: 1px solid var(--win98-light);
+    border-left: 1px solid var(--win98-light);
+    border-right: 1px solid var(--win98-dark);
+    border-bottom: none;
+    color: #000;
+    cursor: pointer;
+    user-select: none;
+  }
+  .tab.active {
+    background: var(--win98-light);
+    font-weight: bold;
+  }
+  .tab .x { color: var(--mirc-red); margin-left: 6px; font-weight: bold; }
+
+  /* ---------- Channel Body (the actual mIRC interior) ---------- */
+  .channel-body {
+    flex: 1;
+    display: flex;
+    background: var(--mirc-bg);
+    border-top: 2px solid var(--win98-shadow);
+    border-left: 2px solid var(--win98-shadow);
+    border-right: 2px solid var(--win98-light);
+    border-bottom: 2px solid var(--win98-light);
+    margin: 2px;
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  .topic {
+    color: var(--mirc-yellow);
+    background: #1a1a1a;
+    border-bottom: 1px solid #333;
+    padding: 4px 8px;
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-shrink: 0;
+  }
+
+  .chat-pane {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    border-right: 1px solid #333;
+  }
+
+  .messages {
+    flex: 1;
+    padding: 4px 8px 6px 8px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    color: var(--mirc-text);
+    word-wrap: break-word;
+    font-size: 13px;
+    line-height: 1.4;
+    scrollbar-color: #888 #222;
+    scrollbar-width: thin;
+  }
+  .messages::-webkit-scrollbar { width: 16px; }
+  .messages::-webkit-scrollbar-track {
+    background: var(--win98-face);
+    border-left: 1px solid var(--win98-shadow);
+  }
+  .messages::-webkit-scrollbar-thumb {
+    background: var(--win98-face);
+    border-top: 1px solid var(--win98-light);
+    border-left: 1px solid var(--win98-light);
+    border-right: 1px solid var(--win98-dark);
+    border-bottom: 1px solid var(--win98-dark);
+  }
+
+  .msg { display: block; padding: 0; margin: 0; }
+  .ts  { color: var(--mirc-grey); }
+  .nick { color: var(--mirc-text); }
+  .nick.op    { color: var(--mirc-op); }
+  .nick.voice { color: var(--mirc-voice); }
+  .nick.you   { color: var(--mirc-yellow); }
+  .system     { color: var(--mirc-system); }
+  .action     { color: var(--mirc-action); font-style: italic; }
+  .error      { color: var(--mirc-red); }
+  .notice     { color: var(--mirc-lightblue); }
+  .warn       { color: var(--mirc-orange); }
+  .pre        { white-space: pre; font-family: inherit; color: var(--mirc-system); }
+  .pre.banner { color: var(--mirc-yellow); }
+  .pre.banner .accent { color: var(--mirc-red); }
+  .file-link  { color: var(--mirc-lightblue); text-decoration: underline; cursor: pointer; }
+  .file-link:hover { color: var(--mirc-yellow); }
+  .cmd-hint   { color: var(--mirc-pink); }
+  .messages a.ext-link {
+    color: var(--mirc-lightblue);
+    text-decoration: underline;
+  }
+  .messages a.ext-link:hover { color: var(--mirc-yellow); }
+  .nudge { color: var(--mirc-yellow) !important; }
+
+  .input-row {
+    flex-shrink: 0;
+    background: #000;
+    border-top: 1px solid #333;
+    display: flex;
+    align-items: center;
+    padding: 4px 6px;
+    gap: 6px;
+  }
+  .input-prompt {
+    color: var(--mirc-yellow);
+    flex-shrink: 0;
+    user-select: none;
+  }
+  .input-prompt .op { color: var(--mirc-op); }
+  #cmd {
+    flex: 1;
+    background: #000;
+    border: none;
+    outline: none;
+    color: var(--mirc-text);
+    font-family: inherit;
+    font-size: 13px;
+    caret-color: var(--mirc-yellow);
+    padding: 2px 0;
+  }
+
+  /* ---------- User List ---------- */
+  .userlist {
+    width: 160px;
+    flex-shrink: 0;
+    background: #000;
+    overflow-y: auto;
+    padding: 4px 6px;
+    font-size: 13px;
+    border-left: 1px solid #333;
+    scrollbar-color: #888 #222;
+    scrollbar-width: thin;
+  }
+  .userlist::-webkit-scrollbar { width: 16px; }
+  .userlist::-webkit-scrollbar-track {
+    background: var(--win98-face);
+    border-left: 1px solid var(--win98-shadow);
+  }
+  .userlist::-webkit-scrollbar-thumb {
+    background: var(--win98-face);
+    border-top: 1px solid var(--win98-light);
+    border-left: 1px solid var(--win98-light);
+    border-right: 1px solid var(--win98-dark);
+    border-bottom: 1px solid var(--win98-dark);
+  }
+  .userlist .header {
+    color: var(--mirc-grey);
+    font-size: 11px;
+    border-bottom: 1px dashed #333;
+    margin-bottom: 4px;
+    padding-bottom: 2px;
+  }
+  .userlist .user {
+    padding: 1px 0;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .userlist .user:hover { background: #1a1a1a; }
+  .userlist .sigil { display: inline-block; width: 10px; }
+  .userlist .sigil.op    { color: var(--mirc-op); }
+  .userlist .sigil.voice { color: var(--mirc-voice); }
+  .userlist .nick.op     { color: var(--mirc-op); }
+  .userlist .nick.voice  { color: var(--mirc-voice); }
+  .userlist .nick.you    { color: var(--mirc-yellow); font-weight: bold; }
+  .userlist .nick.bot    { color: var(--mirc-pink); }
+
+  /* ---------- Status Bar ---------- */
+  .statusbar {
+    background: var(--win98-face);
+    border-top: 1px solid var(--win98-light);
+    color: #000;
+    font-family: "MS Sans Serif", Tahoma, sans-serif;
+    font-size: 11px;
+    padding: 2px 4px;
+    display: flex;
+    gap: 12px;
+    user-select: none;
+  }
+  .statusbar .seg {
+    border-top: 1px solid var(--win98-shadow);
+    border-left: 1px solid var(--win98-shadow);
+    border-right: 1px solid var(--win98-light);
+    border-bottom: 1px solid var(--win98-light);
+    padding: 1px 6px;
+  }
+
+  /* ---------- DCC Transfer Indicator (status strip) ---------- */
+  .xfer {
+    background: #1a1a1a;
+    color: var(--mirc-system);
+    border-top: 1px solid #333;
+    padding: 4px 8px;
+    font-size: 12px;
+    display: none;
+  }
+  .xfer.active { display: block; }
+  .xfer .label { color: var(--mirc-yellow); }
+  .xfer .bar {
+    display: inline-block;
+    width: 240px;
+    height: 12px;
+    border: 1px solid var(--mirc-system);
+    margin: 0 8px;
+    vertical-align: middle;
+    background: #000;
+    position: relative;
+  }
+  .xfer .fill {
+    background: var(--mirc-op);
+    height: 100%;
+    width: 0%;
+    transition: width 0.15s linear;
+  }
+  .xfer .pct { color: var(--mirc-voice); }
+
+  /* ---------- NFO Modal ---------- */
+  .nfo-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.6);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+  }
+  .nfo-overlay.show { display: flex; }
+  .nfo-window {
+    background: var(--win98-face);
+    border-top: 2px solid var(--win98-light);
+    border-left: 2px solid var(--win98-light);
+    border-right: 2px solid var(--win98-dark);
+    border-bottom: 2px solid var(--win98-dark);
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.5);
+    width: 720px;
+    max-width: 92vw;
+    max-height: 86vh;
+    display: flex;
+    flex-direction: column;
+  }
+  .nfo-window .titlebar { cursor: move; }
+  .nfo-body {
+    background: #000;
+    color: var(--mirc-yellow);
+    padding: 12px 14px;
+    overflow: auto;
+    flex: 1;
+    margin: 2px;
+    border-top: 2px solid var(--win98-shadow);
+    border-left: 2px solid var(--win98-shadow);
+    border-right: 2px solid var(--win98-light);
+    border-bottom: 2px solid var(--win98-light);
+    white-space: pre;
+    font-family: inherit;
+    font-size: 13px;
+    line-height: 1.35;
+    scrollbar-color: #888 #222;
+    scrollbar-width: thin;
+  }
+  .nfo-body::-webkit-scrollbar { width: 16px; height: 16px; }
+  .nfo-body::-webkit-scrollbar-track {
+    background: var(--win98-face);
+  }
+  .nfo-body::-webkit-scrollbar-thumb {
+    background: var(--win98-face);
+    border-top: 1px solid var(--win98-light);
+    border-left: 1px solid var(--win98-light);
+    border-right: 1px solid var(--win98-dark);
+    border-bottom: 1px solid var(--win98-dark);
+  }
+  .nfo-body a { color: var(--mirc-lightblue); }
+  .nfo-body .hl { color: var(--mirc-red); }
+  .nfo-body .dim { color: var(--mirc-system); }
+  .nfo-body .ok { color: var(--mirc-voice); }
+
+  /* ---------- Winamp mini ---------- */
+  .winamp {
+    position: absolute;
+    bottom: 40px;
+    right: 36px;
+    width: 230px;
+    background: linear-gradient(180deg, #2b2b2b 0%, #1a1a1a 100%);
+    border: 1px solid #000;
+    box-shadow: 2px 2px 0 rgba(0,0,0,0.5);
+    color: #00ff66;
+    font-family: "Lucida Console", monospace;
+    font-size: 10px;
+    z-index: 50;
+    user-select: none;
+  }
+  .winamp .wa-title {
+    background: linear-gradient(90deg, #555 0%, #333 100%);
+    color: #ccc;
+    font-size: 9px;
+    padding: 2px 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: move;
+  }
+  .winamp .wa-title-text { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .winamp .wa-title-btns { display: inline-flex; gap: 4px; flex-shrink: 0; }
+  .winamp .wa-title-btn {
+    cursor: pointer;
+    padding: 0 4px;
+    color: #ccc;
+    line-height: 11px;
+    user-select: none;
+  }
+  .winamp .wa-title-btn:hover { color: #fff; background: rgba(255,255,255,0.08); }
+  .winamp .wa-screen {
+    padding: 6px 8px 4px 8px;
+    background: #111;
+    border: 1px inset #333;
+    margin: 4px;
+  }
+  .winamp .wa-time {
+    color: #00ff66;
+    font-size: 18px;
+    letter-spacing: 1px;
+    text-shadow: 0 0 3px #00ff66;
+    font-family: "Courier New", monospace;
+  }
+  .winamp .wa-track {
+    color: #ffcc00;
+    overflow: hidden;
+    white-space: nowrap;
+    margin-top: 2px;
+  }
+  .winamp .wa-track span {
+    display: inline-block;
+    padding-left: 100%;
+    animation: marquee 14s linear infinite;
+  }
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+  }
+  .winamp .wa-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 18px;
+    margin-top: 4px;
+  }
+  .winamp .wa-bars i {
+    display: block;
+    width: 6px;
+    background: linear-gradient(180deg, #ff3333 0%, #ffff00 50%, #00ff33 100%);
+    animation: eq 0.6s ease-in-out infinite alternate;
+  }
+  .winamp .wa-bars i:nth-child(1) { animation-delay: 0.0s; height: 60%; }
+  .winamp .wa-bars i:nth-child(2) { animation-delay: 0.1s; height: 40%; }
+  .winamp .wa-bars i:nth-child(3) { animation-delay: 0.2s; height: 80%; }
+  .winamp .wa-bars i:nth-child(4) { animation-delay: 0.05s; height: 50%; }
+  .winamp .wa-bars i:nth-child(5) { animation-delay: 0.15s; height: 70%; }
+  .winamp .wa-bars i:nth-child(6) { animation-delay: 0.25s; height: 30%; }
+  .winamp .wa-bars i:nth-child(7) { animation-delay: 0.3s;  height: 65%; }
+  .winamp .wa-bars i:nth-child(8) { animation-delay: 0.05s; height: 45%; }
+  .winamp .wa-bars i:nth-child(9) { animation-delay: 0.18s; height: 75%; }
+  .winamp .wa-bars i:nth-child(10){ animation-delay: 0.22s; height: 55%; }
+  @keyframes eq {
+    0%   { transform: scaleY(0.4); }
+    100% { transform: scaleY(1.0); }
+  }
+  .winamp .wa-controls {
+    display: flex;
+    gap: 4px;
+    padding: 4px 6px 6px 6px;
+    color: #888;
+    font-family: "Lucida Console", monospace;
+    font-size: 11px;
+  }
+  .winamp .wa-controls span { cursor: pointer; user-select: none; }
+  .winamp .wa-controls span:hover { color: #fff; }
+  .winamp .wa-controls .play-btn { color: #00ff66; }
+  .winamp.idle .wa-controls .play-btn {
+    animation: wa-blink 1.6s ease-in-out infinite;
+  }
+  @keyframes wa-blink {
+    0%, 100% { color: #00ff66; text-shadow: 0 0 4px #00ff66; }
+    50%      { color: #336644; text-shadow: none; }
+  }
+  /* When live (audio playing), kill CSS bar animation; JS drives heights */
+  .winamp.live .wa-bars i {
+    animation: none;
+    transform: none;
+    transition: height 0.06s linear;
+  }
+  /* When paused, freeze bars */
+  .winamp.paused .wa-bars i {
+    animation-play-state: paused;
+    opacity: 0.45;
+  }
+  /* Muted indicator */
+  .winamp.muted .wa-controls #wa-mute { color: #ff6b3b; text-decoration: line-through; }
+
+  /* Hide rules for minimize-to-taskbar */
+  .mirc-window.hidden,
+  .winamp.hidden { display: none; }
+
+  /* ---------- Web portal mini-window (now centered like a real Win98 dialog) ---------- */
+  .webportal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 320px;
+    background: var(--win98-face);
+    border-top: 2px solid var(--win98-light);
+    border-left: 2px solid var(--win98-light);
+    border-right: 2px solid var(--win98-dark);
+    border-bottom: 2px solid var(--win98-dark);
+    box-shadow:
+      inset 1px 1px 0 #dfdfdf,
+      inset -1px -1px 0 var(--win98-shadow),
+      4px 4px 0 rgba(0,0,0,0.5);
+    z-index: 50;
+    font-family: "MS Sans Serif", Tahoma, sans-serif;
+    font-size: 11px;
+    color: #000;
+    user-select: none;
+  }
+  .webportal.hidden { display: none; }
+  .webportal.attention .wp-title {
+    animation: wp-flash 0.6s ease-out 2;
+  }
+  @keyframes wp-flash {
+    0%, 100% { background: linear-gradient(90deg, #000080 0%, #1084d0 100%); }
+    50%      { background: linear-gradient(90deg, #b06000 0%, #e0a050 100%); }
+  }
+
+  .wp-title {
+    background: linear-gradient(90deg, #000080 0%, #1084d0 100%);
+    color: #fff;
+    font-weight: bold;
+    padding: 3px 4px 3px 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: "MS Sans Serif", Tahoma, sans-serif;
+    font-size: 12px;
+    cursor: move;
+  }
+  .wp-icon {
+    display: inline-block;
+    width: 18px; height: 14px;
+    background: #fff;
+    color: #000080;
+    font-size: 8px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 14px;
+    border: 1px solid #000;
+    font-family: "Lucida Console", monospace;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+  }
+  .wp-title-text {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .wp-close {
+    width: 16px; height: 14px;
+    background: var(--win98-face);
+    border-top: 1px solid var(--win98-light);
+    border-left: 1px solid var(--win98-light);
+    border-right: 1px solid var(--win98-dark);
+    border-bottom: 1px solid var(--win98-dark);
+    color: #000;
+    font-size: 11px;
+    line-height: 12px;
+    text-align: center;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .wp-close:active {
+    border-top: 1px solid var(--win98-dark);
+    border-left: 1px solid var(--win98-dark);
+    border-right: 1px solid var(--win98-light);
+    border-bottom: 1px solid var(--win98-light);
+  }
+
+  .wp-body {
+    padding: 10px 10px 10px 10px;
+    background: var(--win98-face);
+  }
+  .wp-row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin-bottom: 10px;
+  }
+  /* Tiny CSS "globe" — late-90s "Internet" icon */
+  .wp-globe {
+    width: 32px; height: 32px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 35% 30%, #b3e0ff 0%, #4a9fe0 45%, #1565a8 100%);
+    border: 1px solid #003363;
+    box-shadow: inset -2px -2px 0 rgba(0,0,0,0.25), 1px 1px 0 #fff;
+    position: relative;
+    overflow: hidden;
+  }
+  .wp-globe::before, .wp-globe::after {
+    content: "";
+    position: absolute;
+    border: 1px solid rgba(255,255,255,0.55);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .wp-globe::before { inset: 4px;  border-color: rgba(255,255,255,0.45); }
+  .wp-globe::after  { inset: 0; border-top: 1px solid rgba(255,255,255,0.55);
+                      border-bottom: 1px solid rgba(255,255,255,0.55);
+                      border-left: none; border-right: none;
+                      border-radius: 0; transform: rotate(0deg); }
+
+  .wp-msg {
+    flex: 1;
+    line-height: 1.35;
+    color: #000;
+    font-size: 11px;
+  }
+  .wp-actions {
+    display: flex;
+    gap: 6px;
+    justify-content: flex-end;
+  }
+  .wp-btn {
+    display: inline-block;
+    padding: 3px 12px;
+    background: var(--win98-face);
+    border-top: 1px solid var(--win98-light);
+    border-left: 1px solid var(--win98-light);
+    border-right: 1px solid var(--win98-dark);
+    border-bottom: 1px solid var(--win98-dark);
+    color: #000;
+    text-decoration: none;
+    font-family: "MS Sans Serif", Tahoma, sans-serif;
+    font-size: 11px;
+    cursor: pointer;
+    line-height: 16px;
+  }
+  .wp-btn:hover { background: #d4d4d4; }
+  .wp-btn:active {
+    border-top: 1px solid var(--win98-dark);
+    border-left: 1px solid var(--win98-dark);
+    border-right: 1px solid var(--win98-light);
+    border-bottom: 1px solid var(--win98-light);
+  }
+  .wp-btn.primary { font-weight: bold; outline: 1px dotted #000; outline-offset: -4px; }
+
+  /* ===== IE5 browser chrome (when .webportal has .ie5 class) ===== */
+  .webportal.ie5 { width: 540px; }
+  .webportal.ie5 .wp-title { cursor: move; font-weight: bold; }
+  .ie-titleicon {
+    display: inline-block;
+    width: 18px; height: 14px;
+    background: linear-gradient(180deg, #0078d4 0%, #003472 100%);
+    color: #fff;
+    font: italic bold 11px/14px "Times New Roman", Times, serif;
+    text-align: center;
+    border: 1px solid #001a3c;
+    flex-shrink: 0;
+    letter-spacing: -1px;
+    text-shadow: 1px 1px 0 #ffaa00, 0 0 1px #fff;
+  }
+  .ie-menu {
+    background: var(--win98-face);
+    border-bottom: 1px solid var(--win98-shadow);
+    padding: 2px 4px;
+    display: flex;
+    gap: 0;
+    font-family: "MS Sans Serif", Tahoma, sans-serif;
+    font-size: 11px;
+    color: #000;
+    user-select: none;
+  }
+  .ie-menu span { padding: 2px 6px; }
+  .ie-menu span:hover { background: #000080; color: #fff; }
+  .ie-toolbar {
+    background: var(--win98-face);
+    border-bottom: 1px solid var(--win98-shadow);
+    padding: 4px 6px;
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
+  .ie-tbtn {
+    background: var(--win98-face);
+    border-top: 1px solid var(--win98-light);
+    border-left: 1px solid var(--win98-light);
+    border-right: 1px solid var(--win98-dark);
+    border-bottom: 1px solid var(--win98-dark);
+    padding: 3px 8px;
+    font-family: "MS Sans Serif", Tahoma, sans-serif;
+    font-size: 11px;
+    color: #000;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    line-height: 14px;
+  }
+  .ie-tbtn:hover:not(:disabled) { background: #d4d4d4; }
+  .ie-tbtn:active:not(:disabled),
+  .ie-tbtn.pressed {
+    border-top: 1px solid var(--win98-dark);
+    border-left: 1px solid var(--win98-dark);
+    border-right: 1px solid var(--win98-light);
+    border-bottom: 1px solid var(--win98-light);
+  }
+  .ie-tbtn:disabled {
+    color: #888;
+    cursor: not-allowed;
+  }
+  .ie-tbsep {
+    width: 1px; height: 18px;
+    background: var(--win98-shadow);
+    margin: 0 2px;
+  }
+  .ie-icon-stop    { color: #d40000; font-weight: bold; }
+  .ie-icon-refresh { color: #0066cc; font-weight: bold; }
+  .ie-icon-home    { color: #006600; font-weight: bold; }
+  .ie-icon-go      { color: #0066cc; font-weight: bold; }
+  .ie-arrow        { color: #003366; font-weight: bold; font-size: 10px; }
+
+  .ie-addressbar {
+    background: var(--win98-face);
+    border-bottom: 1px solid var(--win98-shadow);
+    padding: 4px 6px 5px 6px;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+  .ie-addr-label {
+    font-family: "MS Sans Serif", Tahoma, sans-serif;
+    font-size: 11px;
+    color: #000;
+    padding: 0 2px;
+  }
+  .ie-addr-field {
+    flex: 1;
+    background: #fff;
+    border-top: 1px solid var(--win98-dark);
+    border-left: 1px solid var(--win98-dark);
+    border-right: 1px solid var(--win98-light);
+    border-bottom: 1px solid var(--win98-light);
+    display: flex;
+    align-items: center;
+    padding: 2px 4px;
+    height: 22px;
+  }
+  .ie-addr-icon {
+    display: inline-block;
+    width: 16px; height: 14px;
+    background: linear-gradient(180deg, #0078d4 0%, #003472 100%);
+    color: #fff;
+    font: italic bold 10px/14px "Times New Roman", Times, serif;
+    text-align: center;
+    border: 1px solid #001a3c;
+    letter-spacing: -1px;
+    flex-shrink: 0;
+    margin-right: 6px;
+  }
+  .ie-addr-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: "MS Sans Serif", Tahoma, sans-serif;
+    font-size: 12px;
+    color: #000;
+    padding: 0;
+  }
+  .ie-content {
+    background: #fff;
+    padding: 18px 22px 14px 22px;
+    color: #000;
+    font-family: "Times New Roman", Times, serif;
+    font-size: 14px;
+    line-height: 1.45;
+    border-top: 1px solid var(--win98-dark);
+    border-left: 1px solid var(--win98-dark);
+    border-right: 1px solid var(--win98-light);
+    border-bottom: 1px solid var(--win98-light);
+    margin: 2px;
+  }
+  .ie-h1 {
+    margin: 0 0 6px 0;
+    font: normal bold 22px/1.2 "Times New Roman", Times, serif;
+    color: #000080;
+    border-bottom: 2px solid #000080;
+    padding-bottom: 4px;
+  }
+  .ie-lead { margin: 10px 0 10px 0; font-size: 14px; }
+  .ie-text { margin: 0 0 14px 0; font-size: 13px; color: #333; line-height: 1.5; }
+  .ie-content .wp-actions {
+    margin-top: 6px;
+    padding-top: 10px;
+    border-top: 1px dashed #999;
+    justify-content: flex-start;
+  }
+  .ie-statusbar {
+    background: var(--win98-face);
+    border-top: 1px solid var(--win98-light);
+    padding: 2px 4px;
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    font-family: "MS Sans Serif", Tahoma, sans-serif;
+    font-size: 11px;
+    color: #000;
+  }
+  .ie-status-text {
+    border-top: 1px solid var(--win98-shadow);
+    border-left: 1px solid var(--win98-shadow);
+    border-right: 1px solid var(--win98-light);
+    border-bottom: 1px solid var(--win98-light);
+    padding: 1px 6px;
+    flex: 1;
+  }
+  .ie-status-zone {
+    border-top: 1px solid var(--win98-shadow);
+    border-left: 1px solid var(--win98-shadow);
+    border-right: 1px solid var(--win98-light);
+    border-bottom: 1px solid var(--win98-light);
+    padding: 1px 8px;
+    flex-shrink: 0;
+  }
+
+  /* mobile / narrow: hide alongside winamp */
+  @media (max-width: 760px) {
+    .webportal { display: none; }
+  }
+
+  /* ---------- Win98 Taskbar ---------- */
+  .taskbar {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 28px;
+    background: var(--win98-face);
+    border-top: 1px solid var(--win98-light);
+    box-shadow: 0 -1px 0 var(--win98-shadow);
+    display: flex;
+    align-items: center;
+    padding: 2px 4px;
+    gap: 4px;
+    z-index: 60;
+    font-family: "MS Sans Serif", Tahoma, sans-serif;
+    user-select: none;
+  }
+  .start-btn {
+    height: 22px;
+    background: var(--win98-face);
+    border-top: 1px solid var(--win98-light);
+    border-left: 1px solid var(--win98-light);
+    border-right: 1px solid var(--win98-dark);
+    border-bottom: 1px solid var(--win98-dark);
+    padding: 0 8px 0 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: "MS Sans Serif", Tahoma, sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    color: #000;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .start-btn:hover { background: #d4d4d4; }
+  .start-btn:active, .start-btn.pressed {
+    border-top: 1px solid var(--win98-dark);
+    border-left: 1px solid var(--win98-dark);
+    border-right: 1px solid var(--win98-light);
+    border-bottom: 1px solid var(--win98-light);
+  }
+  .start-flag {
+    width: 16px; height: 14px;
+    flex-shrink: 0;
+    display: inline-block;
+    background:
+      linear-gradient(135deg, #ff3030 0%, #ff3030 50%, #2dbb2d 50%, #2dbb2d 100%) top    / 100% 50% no-repeat,
+      linear-gradient(135deg, #1da3ff 0%, #1da3ff 50%, #ffe333 50%, #ffe333 100%) bottom / 100% 50% no-repeat;
+    transform: skewY(-12deg);
+    box-shadow: inset -1px -1px 0 rgba(0,0,0,0.25);
+  }
+  .task-divider {
+    width: 1px;
+    height: 22px;
+    background: var(--win98-shadow);
+    box-shadow: 1px 0 0 var(--win98-light);
+    margin: 0 4px 0 2px;
+    flex-shrink: 0;
+  }
+  .task-buttons {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    overflow: hidden;
+    min-width: 0;
+  }
+  .task-button {
+    height: 22px;
+    background: var(--win98-face);
+    border-top: 1px solid var(--win98-light);
+    border-left: 1px solid var(--win98-light);
+    border-right: 1px solid var(--win98-dark);
+    border-bottom: 1px solid var(--win98-dark);
+    padding: 0 8px 0 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: "MS Sans Serif", Tahoma, sans-serif;
+    font-size: 11px;
+    color: #000;
+    cursor: pointer;
+    max-width: 200px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .task-button:hover { background: #d4d4d4; }
+  .task-button .tb-label {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+  }
+  .task-button .tb-icon {
+    width: 14px; height: 14px;
+    flex-shrink: 0;
+    display: inline-block;
+  }
+  .task-button .tb-icon-globe {
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #b3e0ff 0%, #4a9fe0 45%, #1565a8 100%);
+    border: 1px solid #003363;
+    box-shadow: inset -1px -1px 0 rgba(0,0,0,0.25);
+  }
+  /* mIRC channel icon (yellow square with #) */
+  .task-button .tb-icon-irc {
+    background: var(--mirc-yellow);
+    border: 1px solid #000;
+    box-shadow: inset -2px -2px 0 #aa8800;
+    position: relative;
+  }
+  .task-button .tb-icon-irc::after {
+    content: "#";
+    position: absolute; inset: 0;
+    color: #000;
+    font: bold 11px/12px "Lucida Console", monospace;
+    text-align: center;
+  }
+  /* Winamp icon (dark gray with green note) */
+  .task-button .tb-icon-music {
+    background: linear-gradient(180deg, #2b2b2b 0%, #1a1a1a 100%);
+    border: 1px solid #000;
+    position: relative;
+  }
+  .task-button .tb-icon-music::after {
+    content: "♪";
+    position: absolute; inset: 0;
+    color: #00ff66;
+    font-size: 12px;
+    line-height: 12px;
+    text-align: center;
+    text-shadow: 0 0 2px #00ff66;
+  }
+  .task-button.attention {
+    animation: tb-flash 0.55s ease-out 4;
+  }
+  @keyframes tb-flash {
+    0%, 100% { background: var(--win98-face); }
+    50%      { background: #ffd58a; }
+  }
+  .task-tray {
+    flex-shrink: 0;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    border-top: 1px solid var(--win98-shadow);
+    border-left: 1px solid var(--win98-shadow);
+    border-right: 1px solid var(--win98-light);
+    border-bottom: 1px solid var(--win98-light);
+    background: var(--win98-face);
+    font-size: 11px;
+    color: #000;
+    gap: 8px;
+  }
+  .tray-clock { font-variant-numeric: tabular-nums; }
+
+  @media (max-width: 760px) {
+    .taskbar { height: 24px; }
+    .start-label { display: none; }
+  }
+
+  /* ---------- Desktop icons (sit on the teal desktop, behind windows) ---------- */
+  .desktop-icons {
+    position: absolute;
+    top: 12px; left: 12px;
+    z-index: 1;
+    display: grid;
+    grid-template-rows: repeat(auto-fill, 84px);
+    grid-auto-flow: column;
+    gap: 2px 4px;
+    padding: 4px;
+    max-height: calc(100vh - 80px);
+  }
+  .dt-icon {
+    width: 80px;
+    padding: 4px 2px 2px 2px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    cursor: pointer;
+    user-select: none;
+    outline: none;
+    border: 1px dotted transparent;
+    background: transparent;
+  }
+  .dt-icon:hover { border: 1px dotted rgba(255,255,255,0.4); }
+  .dt-icon:focus,
+  .dt-icon.selected { border: 1px dotted rgba(255,255,255,0.85); }
+  .dt-icon-glyph {
+    width: 32px; height: 32px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    flex-shrink: 0;
+  }
+  .dt-icon-label {
+    font: 11px/1.15 "MS Sans Serif", Tahoma, sans-serif;
+    color: #fff;
+    text-align: center;
+    text-shadow: 1px 1px 0 #000, 0 1px 0 #000, 1px 0 0 #000, -1px 0 0 #000;
+    padding: 1px 3px;
+    max-width: 78px;
+    word-wrap: break-word;
+  }
+  .dt-icon:focus .dt-icon-label,
+  .dt-icon.selected .dt-icon-label {
+    background: #000080;
+    color: #fff;
+    text-shadow: none;
+  }
+
+  /* Icon graphics — inline SVGs (small, sharp, no external deps) */
+  .dt-glyph-my-computer {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='3' y='4' width='26' height='18' fill='%23d4d0c8' stroke='%23000'/><rect x='5' y='6' width='22' height='14' fill='%231c5b8c' stroke='%23000'/><rect x='13' y='22' width='6' height='3' fill='%23a0a0a0'/><rect x='3' y='26' width='26' height='4' fill='%23d4d0c8' stroke='%23000'/><circle cx='25' cy='28' r='1' fill='%2333dd33'/></svg>");
+  }
+  .dt-glyph-mirc {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='3' y='3' width='26' height='26' fill='%23ffd700' stroke='%23000' stroke-width='1.5'/><text x='16' y='25' text-anchor='middle' font-family='Lucida Console,monospace' font-size='22' font-weight='bold' fill='%23000'>%23</text></svg>");
+  }
+  .dt-glyph-ie {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><defs><radialGradient id='g' cx='35%25' cy='30%25'><stop offset='0%25' stop-color='%23a0d0ff'/><stop offset='100%25' stop-color='%23003472'/></radialGradient></defs><circle cx='16' cy='16' r='13' fill='url(%23g)' stroke='%23001a3c'/><text x='16' y='24' text-anchor='middle' font-family='Times New Roman,serif' font-size='22' font-style='italic' font-weight='bold' fill='%23fff'>e</text></svg>");
+  }
+  .dt-glyph-recycle {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><path d='M7 9 L9 28 L23 28 L25 9 Z' fill='%237fb6e4' stroke='%23000' stroke-width='1.5'/><rect x='4' y='6' width='24' height='4' fill='%23c0c0c0' stroke='%23000' stroke-width='1.5'/><path d='M12 4 L20 4 L20 7 L12 7 Z' fill='%23a0a0a0' stroke='%23000'/><line x1='12' y1='13' x2='12' y2='25' stroke='%23000'/><line x1='16' y1='13' x2='16' y2='25' stroke='%23000'/><line x1='20' y1='13' x2='20' y2='25' stroke='%23000'/></svg>");
+  }
+  .dt-glyph-shortcut {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><defs><radialGradient id='g2' cx='35%25' cy='30%25'><stop offset='0%25' stop-color='%23a0d0ff'/><stop offset='100%25' stop-color='%23003472'/></radialGradient></defs><circle cx='16' cy='16' r='13' fill='url(%23g2)' stroke='%23001a3c'/><text x='16' y='24' text-anchor='middle' font-family='Times New Roman,serif' font-size='22' font-style='italic' font-weight='bold' fill='%23fff'>e</text><rect x='-1' y='20' width='12' height='12' fill='%23fff' stroke='%23000'/><polygon points='1,30 11,30 1,22' fill='%23000'/><polygon points='3,29 9,29 3,23' fill='%23fff'/><polygon points='4,28 8,28 4,24' fill='%23000'/></svg>");
+  }
+  /* Age of Empires II — castle silhouette in red sandstone with a gold pennant */
+  .dt-glyph-aoe2 {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='0' y='28' width='32' height='4' fill='%23408040'/><rect x='2' y='14' width='28' height='14' fill='%23b85a30' stroke='%23000'/><rect x='5' y='10' width='5' height='5' fill='%23b85a30' stroke='%23000'/><rect x='13' y='6' width='6' height='9' fill='%23b85a30' stroke='%23000'/><rect x='22' y='10' width='5' height='5' fill='%23b85a30' stroke='%23000'/><rect x='5' y='9' width='1' height='2' fill='%23b85a30' stroke='%23000' stroke-width='0.5'/><rect x='7' y='9' width='1' height='2' fill='%23b85a30' stroke='%23000' stroke-width='0.5'/><rect x='9' y='9' width='1' height='2' fill='%23b85a30' stroke='%23000' stroke-width='0.5'/><rect x='13' y='5' width='1' height='2' fill='%23b85a30' stroke='%23000' stroke-width='0.5'/><rect x='15' y='5' width='1' height='2' fill='%23b85a30' stroke='%23000' stroke-width='0.5'/><rect x='17' y='5' width='1' height='2' fill='%23b85a30' stroke='%23000' stroke-width='0.5'/><rect x='22' y='9' width='1' height='2' fill='%23b85a30' stroke='%23000' stroke-width='0.5'/><rect x='24' y='9' width='1' height='2' fill='%23b85a30' stroke='%23000' stroke-width='0.5'/><rect x='26' y='9' width='1' height='2' fill='%23b85a30' stroke='%23000' stroke-width='0.5'/><rect x='14' y='20' width='4' height='8' fill='%23000'/><line x1='16' y1='6' x2='16' y2='2' stroke='%23000'/><polygon points='16,2 21,4 16,5' fill='%23ffd700' stroke='%23000'/></svg>");
+  }
+  /* StarCraft — black box with the iconic gold star */
+  .dt-glyph-starcraft {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='1' y='1' width='30' height='30' fill='%23000' stroke='%23202040'/><circle cx='16' cy='16' r='11' fill='%23001830'/><polygon points='16,4 19,12 28,12 21,17 24,26 16,21 8,26 11,17 4,12 13,12' fill='%23ffd700' stroke='%23000'/><circle cx='16' cy='16' r='3' fill='%23ff6020'/></svg>");
+  }
+  /* SimCity 2000 — isometric city skyline with a sun */
+  .dt-glyph-simcity {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='0' y='0' width='32' height='22' fill='%2388c8e0'/><circle cx='26' cy='6' r='3' fill='%23ffe680'/><rect x='0' y='22' width='32' height='10' fill='%23508050'/><rect x='3' y='13' width='4' height='9' fill='%23606060' stroke='%23000'/><rect x='8' y='9' width='6' height='13' fill='%23808080' stroke='%23000'/><rect x='15' y='14' width='4' height='8' fill='%23606060' stroke='%23000'/><rect x='20' y='5' width='5' height='17' fill='%23a0a0a0' stroke='%23000'/><rect x='26' y='11' width='4' height='11' fill='%23808080' stroke='%23000'/><rect x='4' y='15' width='1' height='1' fill='%23ffe680'/><rect x='5' y='18' width='1' height='1' fill='%23ffe680'/><rect x='9' y='11' width='1' height='1' fill='%23ffe680'/><rect x='12' y='15' width='1' height='1' fill='%23ffe680'/><rect x='10' y='18' width='1' height='1' fill='%23ffe680'/><rect x='21' y='8' width='1' height='1' fill='%23ffe680'/><rect x='23' y='13' width='1' height='1' fill='%23ffe680'/><rect x='22' y='17' width='1' height='1' fill='%23ffe680'/><rect x='27' y='14' width='1' height='1' fill='%23ffe680'/><rect x='28' y='18' width='1' height='1' fill='%23ffe680'/><rect x='16' y='17' width='1' height='1' fill='%23ffe680'/></svg>");
+  }
+  /* SNES emulator — the iconic SNES controller (gray, with d-pad and 4 colored buttons) */
+  .dt-glyph-snes {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='1' y='10' width='30' height='14' rx='6' ry='6' fill='%23dcdcdc' stroke='%23000'/><rect x='4' y='8' width='6' height='3' rx='1' ry='1' fill='%23a0a0a0' stroke='%23000'/><rect x='22' y='8' width='6' height='3' rx='1' ry='1' fill='%23a0a0a0' stroke='%23000'/><rect x='5' y='14' width='2' height='6' fill='%23303030'/><rect x='3' y='16' width='6' height='2' fill='%23303030'/><circle cx='17' cy='14' r='1.6' fill='%23a0a0ff' stroke='%23000' stroke-width='0.5'/><circle cx='21' cy='14' r='1.6' fill='%23a0a0ff' stroke='%23000' stroke-width='0.5'/><circle cx='17' cy='20' r='1.6' fill='%23ff80a0' stroke='%23000' stroke-width='0.5'/><circle cx='21' cy='20' r='1.6' fill='%23ff80a0' stroke='%23000' stroke-width='0.5'/><rect x='12' y='17' width='2.5' height='1' fill='%23303030' rx='0.5'/><rect x='25' y='17' width='2.5' height='1' fill='%23303030' rx='0.5'/></svg>");
+  }
+  .dt-glyph-programs {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><path d='M3 10 L13 10 L15 12 L29 12 L29 26 L3 26 Z' fill='%23ffe680' stroke='%23000' stroke-width='1.5'/></svg>");
+  }
+  .dt-glyph-docs {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><path d='M3 10 L13 10 L15 12 L29 12 L29 26 L3 26 Z' fill='%23ffe680' stroke='%23000' stroke-width='1.5'/><rect x='10' y='8' width='12' height='14' fill='%23fff' stroke='%23000'/></svg>");
+  }
+  .dt-glyph-settings {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='10' fill='%23c0c0c0' stroke='%23000' stroke-width='1.5'/><circle cx='16' cy='16' r='4' fill='%23000'/><rect x='15' y='3' width='2' height='4' fill='%23000'/><rect x='15' y='25' width='2' height='4' fill='%23000'/><rect x='3' y='15' width='4' height='2' fill='%23000'/><rect x='25' y='15' width='4' height='2' fill='%23000'/></svg>");
+  }
+  .dt-glyph-find {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='13' cy='13' r='8' fill='%23a0d0ff' stroke='%23000' stroke-width='2.5'/><line x1='19' y1='19' x2='28' y2='28' stroke='%23000' stroke-width='3'/></svg>");
+  }
+  .dt-glyph-run {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='4' y='6' width='24' height='20' fill='%23c0c0c0' stroke='%23000' stroke-width='1.5'/><rect x='6' y='8' width='20' height='14' fill='%23000'/><polygon points='12,12 20,15 12,18' fill='%2300ff66'/></svg>");
+  }
+  .dt-glyph-shutdown {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='11' fill='%23ffd700' stroke='%23000' stroke-width='1.5'/><line x1='16' y1='6' x2='16' y2='14' stroke='%23000' stroke-width='3'/><circle cx='16' cy='18' r='6' fill='none' stroke='%23000' stroke-width='2.5'/></svg>");
+  }
+  .dt-glyph-mirc-sm     { background-image: var(--mirc-bg, none); }
+  .dt-glyph-winamp-sm {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='2' y='6' width='28' height='20' fill='%231a1a1a' stroke='%23000'/><text x='16' y='22' text-anchor='middle' font-family='Lucida Console' font-size='16' fill='%2300ff66'>%E2%99%AA</text></svg>");
+  }
+  .dt-glyph-ie-sm { /* reuses dt-glyph-ie when both classes applied */ }
+
+  /* ---------- Start Menu ---------- */
+  .start-menu {
+    position: absolute;
+    bottom: 28px;
+    left: 2px;
+    width: 224px;
+    background: var(--win98-face);
+    border-top: 2px solid var(--win98-light);
+    border-left: 2px solid var(--win98-light);
+    border-right: 2px solid var(--win98-dark);
+    border-bottom: 2px solid var(--win98-dark);
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.5);
+    z-index: 70;
+    display: flex;
+    font-family: "MS Sans Serif", Tahoma, sans-serif;
+    font-size: 12px;
+    user-select: none;
+  }
+  .start-menu.hidden { display: none; }
+  .start-sidebar {
+    width: 28px;
+    background: linear-gradient(180deg, #6f6f97 0%, #2a2a55 70%, #181838 100%);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 12px 0 6px 0;
+    flex-shrink: 0;
+  }
+  .start-sidebar-text {
+    color: #c0c0c0;
+    font: italic bold 18px/1 "MS Sans Serif", Tahoma, sans-serif;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    text-shadow: 1px 1px 0 #000;
+    letter-spacing: 1px;
+  }
+  .start-sidebar-98 { color: #fff; padding-left: 4px; }
+  .start-items {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 2px;
+    min-width: 0;
+  }
+  .start-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 8px 5px 4px;
+    color: #000;
+    cursor: pointer;
+    outline: none;
+  }
+  .start-item:hover,
+  .start-item:focus,
+  .start-item.active { background: #000080; color: #fff; }
+  .start-item:hover .start-item-arrow,
+  .start-item:focus .start-item-arrow,
+  .start-item.active .start-item-arrow { color: #fff; }
+  .start-item-icon {
+    width: 24px; height: 24px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    flex-shrink: 0;
+  }
+  .start-item-label { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .start-item-label u { text-decoration: underline; }
+  .start-item-arrow { font-size: 9px; color: #555; }
+  .start-sep {
+    height: 1px;
+    margin: 3px 4px;
+    background: var(--win98-shadow);
+    box-shadow: 0 1px 0 var(--win98-light);
+  }
+
+  /* Programs submenu — pops out to the right */
+  .start-submenu {
+    position: absolute;
+    left: 224px;
+    bottom: 0;
+    min-width: 200px;
+    background: var(--win98-face);
+    border-top: 2px solid var(--win98-light);
+    border-left: 2px solid var(--win98-light);
+    border-right: 2px solid var(--win98-dark);
+    border-bottom: 2px solid var(--win98-dark);
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.5);
+    padding: 2px;
+    display: flex;
+    flex-direction: column;
+  }
+  .start-submenu.hidden { display: none; }
+  .start-submenu .start-item-icon { width: 20px; height: 20px; }
+
+  /* ---------- Run dialog ---------- */
+  .run-dialog {
+    position: absolute;
+    top: 38%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 360px;
+    background: var(--win98-face);
+    border-top: 2px solid var(--win98-light);
+    border-left: 2px solid var(--win98-light);
+    border-right: 2px solid var(--win98-dark);
+    border-bottom: 2px solid var(--win98-dark);
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.5);
+    z-index: 80;
+    font-family: "MS Sans Serif", Tahoma, sans-serif;
+    font-size: 12px;
+    color: #000;
+  }
+  .run-dialog.hidden { display: none; }
+  .run-title {
+    background: linear-gradient(90deg, #000080 0%, #1084d0 100%);
+    color: #fff;
+    font-weight: bold;
+    padding: 3px 4px 3px 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: move;
+  }
+  .run-icon {
+    display: inline-block;
+    width: 16px; height: 14px;
+    background: #ffd700;
+    color: #000;
+    text-align: center;
+    line-height: 14px;
+    border: 1px solid #000;
+    font-size: 9px;
+  }
+  .run-title-text { flex: 1; white-space: nowrap; overflow: hidden; }
+  .run-body { padding: 14px; }
+  .run-desc { margin: 0 0 12px 0; line-height: 1.4; font-size: 12px; }
+  .run-row { display: flex; gap: 8px; align-items: center; margin-bottom: 14px; }
+  .run-row label { flex-shrink: 0; }
+  .run-row input {
+    flex: 1;
+    background: #fff;
+    border-top: 1px solid var(--win98-dark);
+    border-left: 1px solid var(--win98-dark);
+    border-right: 1px solid var(--win98-light);
+    border-bottom: 1px solid var(--win98-light);
+    padding: 3px 4px;
+    font-family: "MS Sans Serif", Tahoma, sans-serif;
+    font-size: 12px;
+  }
+  .run-actions { display: flex; gap: 6px; justify-content: flex-end; }
+
+  /* On narrow viewports, hide desktop icons + collapse start menu */
+  @media (max-width: 760px) {
+    .desktop-icons { display: none; }
+    .start-menu { width: 200px; }
+    .start-submenu { display: none !important; }
+  }
+
+  /* ---------- Disconnected screen ---------- */
+  .disconnected {
+    position: fixed; inset: 0;
+    background: #000;
+    color: var(--mirc-grey);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    font-size: 14px;
+    z-index: 200;
+    padding: 24px;
+    text-align: center;
+  }
+  .disconnected.show { display: flex; }
+  .disconnected pre { color: var(--mirc-system); margin: 0 0 18px 0; }
+  .disconnected button {
+    margin-top: 16px;
+    background: var(--win98-face);
+    border-top: 1px solid var(--win98-light);
+    border-left: 1px solid var(--win98-light);
+    border-right: 1px solid var(--win98-dark);
+    border-bottom: 1px solid var(--win98-dark);
+    color: #000;
+    padding: 4px 14px;
+    font-family: "MS Sans Serif", Tahoma, sans-serif;
+    font-size: 12px;
+    cursor: pointer;
+  }
+  .disconnected button:active {
+    border-top: 1px solid var(--win98-dark);
+    border-left: 1px solid var(--win98-dark);
+    border-right: 1px solid var(--win98-light);
+    border-bottom: 1px solid var(--win98-light);
+  }
+
+  /* ---------- Responsive: collapse user list on narrow ---------- */
+  @media (max-width: 760px) {
+    .userlist { display: none; }
+    .winamp { display: none; }
+    .mirc-window { top: 4px; left: 4px; right: 4px; bottom: 4px; min-width: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Win98 desktop icons (sit on the teal desktop, visible when mIRC is minimized) -->
+<div class="desktop-icons" id="desktop-icons" aria-label="desktop">
+  <div class="dt-icon" data-app="my-computer" tabindex="0" role="button" aria-label="My Computer">
+    <div class="dt-icon-glyph dt-glyph-my-computer" aria-hidden="true"></div>
+    <div class="dt-icon-label">My Computer</div>
+  </div>
+  <div class="dt-icon" data-app="mirc" tabindex="0" role="button" aria-label="mIRC32">
+    <div class="dt-icon-glyph dt-glyph-mirc" aria-hidden="true"></div>
+    <div class="dt-icon-label">mIRC32.lnk</div>
+  </div>
+  <div class="dt-icon" data-app="iexplore" tabindex="0" role="button" aria-label="Internet Explorer">
+    <div class="dt-icon-glyph dt-glyph-ie" aria-hidden="true"></div>
+    <div class="dt-icon-label">Internet<br>Explorer</div>
+  </div>
+  <div class="dt-icon" data-app="recycle" tabindex="0" role="button" aria-label="Recycle Bin">
+    <div class="dt-icon-glyph dt-glyph-recycle" aria-hidden="true"></div>
+    <div class="dt-icon-label">Recycle Bin</div>
+  </div>
+  <div class="dt-icon" data-app="rjplaton-url" tabindex="0" role="button" aria-label="Shortcut to rjplaton.com">
+    <div class="dt-icon-glyph dt-glyph-shortcut" aria-hidden="true"></div>
+    <div class="dt-icon-label">rjplaton.com<br>.url</div>
+  </div>
+  <div class="dt-icon" data-app="aoe2" tabindex="0" role="button" aria-label="Age of Empires II">
+    <div class="dt-icon-glyph dt-glyph-aoe2" aria-hidden="true"></div>
+    <div class="dt-icon-label">Age of<br>Empires II</div>
+  </div>
+  <div class="dt-icon" data-app="starcraft" tabindex="0" role="button" aria-label="StarCraft">
+    <div class="dt-icon-glyph dt-glyph-starcraft" aria-hidden="true"></div>
+    <div class="dt-icon-label">StarCraft</div>
+  </div>
+  <div class="dt-icon" data-app="simcity" tabindex="0" role="button" aria-label="SimCity 2000">
+    <div class="dt-icon-glyph dt-glyph-simcity" aria-hidden="true"></div>
+    <div class="dt-icon-label">SimCity<br>2000</div>
+  </div>
+  <div class="dt-icon" data-app="snes" tabindex="0" role="button" aria-label="ZSNES emulator">
+    <div class="dt-icon-glyph dt-glyph-snes" aria-hidden="true"></div>
+    <div class="dt-icon-label">ZSNES.exe</div>
+  </div>
+</div>
+
+<div class="mirc-window" id="mirc-window" role="application" aria-label="mIRC channel #rjplaton">
+
+  <div class="titlebar">
+    <span class="icon" aria-hidden="true"></span>
+    <span class="title-text">mIRC32 - [#rjplaton] : irc.rjplaton.com : 0day mp3z, releases &amp; chat</span>
+    <span class="controls">
+      <span class="ctrl-btn" title="Minimize" id="mirc-min-btn">_</span>
+      <span class="ctrl-btn" title="Maximize">□</span>
+      <span class="ctrl-btn" title="Close" id="close-btn">×</span>
+    </span>
+  </div>
+
+  <div class="menubar">
+    <span><u>F</u>ile</span>
+    <span><u>E</u>dit</span>
+    <span><u>V</u>iew</span>
+    <span><u>F</u>avorites</span>
+    <span><u>T</u>ools</span>
+    <span><u>D</u>CC</span>
+    <span><u>C</u>ommands</span>
+    <span><u>W</u>indow</span>
+    <span><u>H</u>elp</span>
+  </div>
+
+  <div class="toolbar" aria-hidden="true">
+    <span class="tb-btn" title="Connect">⏻</span>
+    <span class="tb-btn" title="Options">⚙</span>
+    <span class="tb-sep"></span>
+    <span class="tb-btn" title="Send">»</span>
+    <span class="tb-btn" title="Get">«</span>
+    <span class="tb-btn" title="Chat">▤</span>
+    <span class="tb-sep"></span>
+    <span class="tb-btn" title="Channels">#</span>
+    <span class="tb-btn" title="Names">☰</span>
+    <span class="tb-btn" title="Whois">?</span>
+    <span class="tb-sep"></span>
+    <span class="tb-btn" title="Lock">🔒</span>
+    <span class="tb-btn" title="Help">i</span>
+  </div>
+
+  <div class="tabs">
+    <div class="tab">Status<span class="x">×</span></div>
+    <div class="tab active">#rjplaton<span class="x">×</span></div>
+  </div>
+
+  <div class="channel-body">
+
+    <div class="chat-pane">
+      <div class="topic" id="topic">
+        Topic for #rjplaton: 0day mp3z, personal releases by @rjplaton :: type !rules :: !list :: !help
+      </div>
+
+      <div class="messages" id="messages" aria-live="polite"></div>
+
+      <div class="xfer" id="xfer">
+        <span class="label" id="xfer-label">DCC SEND idle</span>
+        <span class="bar"><span class="fill" id="xfer-fill"></span></span>
+        <span class="pct" id="xfer-pct">0%</span>
+      </div>
+
+      <div class="input-row">
+        <span class="input-prompt">&lt;<span class="op">@</span>rjplaton&gt;</span>
+        <input id="cmd" type="text" autocomplete="off" spellcheck="false"
+               placeholder="type a message or /help" autofocus>
+      </div>
+    </div>
+
+    <div class="userlist" id="userlist" aria-label="Channel users">
+      <div class="header">— @ +28 users —</div>
+      <!-- populated by JS -->
+    </div>
+
+  </div>
+
+  <div class="statusbar">
+    <span class="seg" id="sb-conn">[irc.rjplaton.com +i]</span>
+    <span class="seg" id="sb-chan">[#rjplaton (+nt)]</span>
+    <span class="seg" id="sb-lag">Lag: 47ms</span>
+    <span class="seg" id="sb-clock">--:--:--</span>
+    <span class="seg" style="margin-left:auto;">CAPS</span>
+    <span class="seg">NUM</span>
+  </div>
+</div>
+
+<!-- Winamp mini -->
+<div class="winamp idle" id="winamp" aria-hidden="false" aria-label="winamp player">
+  <div class="wa-title">
+    <span class="wa-title-text">WINAMP 2.91 - now playing</span>
+    <span class="wa-title-btns">
+      <span class="wa-title-btn" id="wa-min" title="Minimize">_</span>
+      <span class="wa-title-btn" id="wa-close" title="Close">×</span>
+    </span>
+  </div>
+  <div class="wa-screen">
+    <div class="wa-time" id="wa-time">0:00</div>
+    <div class="wa-track"><span id="wa-track">★ click ► to play ★ rjplaton lofi mix vol.1 ★ </span></div>
+    <div class="wa-bars" id="wa-bars" aria-hidden="true">
+      <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+    </div>
+  </div>
+  <div class="wa-controls">
+    <span id="wa-prev"  title="Previous track">|◄◄</span>
+    <span id="wa-play"  class="play-btn" title="Play">►</span>
+    <span id="wa-pause" title="Pause">||</span>
+    <span id="wa-stop"  title="Stop">■</span>
+    <span id="wa-next"  title="Next track">►►|</span>
+    <span style="margin-left:auto;" id="wa-mute" title="Mute">EQ</span>
+    <span title="Playlist">PL</span>
+  </div>
+</div>
+
+<!-- Web portal: full IE5 browser chrome wrapping the modern-client landing -->
+<div class="webportal ie5" id="webportal" role="dialog" aria-label="rjplaton.com - Microsoft Internet Explorer">
+  <div class="wp-title">
+    <span class="ie-titleicon" aria-hidden="true">e</span>
+    <span class="wp-title-text">rjplaton.com - Microsoft Internet Explorer</span>
+    <span class="wp-close" id="wp-close" title="Close">×</span>
+  </div>
+
+  <div class="ie-menu" aria-hidden="true">
+    <span><u>F</u>ile</span>
+    <span><u>E</u>dit</span>
+    <span><u>V</u>iew</span>
+    <span><u>F</u>avorites</span>
+    <span><u>T</u>ools</span>
+    <span><u>H</u>elp</span>
+  </div>
+
+  <div class="ie-toolbar">
+    <button class="ie-tbtn" disabled><span class="ie-arrow">◄</span> Back</button>
+    <button class="ie-tbtn" disabled>Forward <span class="ie-arrow">►</span></button>
+    <span class="ie-tbsep"></span>
+    <button class="ie-tbtn" id="ie-stop"><span class="ie-icon-stop">■</span> Stop</button>
+    <button class="ie-tbtn" id="ie-refresh"><span class="ie-icon-refresh">↻</span> Refresh</button>
+    <button class="ie-tbtn" id="ie-home"><span class="ie-icon-home">⌂</span> Home</button>
+  </div>
+
+  <div class="ie-addressbar">
+    <span class="ie-addr-label">Address</span>
+    <div class="ie-addr-field">
+      <span class="ie-addr-icon" aria-hidden="true">e</span>
+      <input class="ie-addr-input" id="ie-address" value="https://rjplaton.com" readonly>
+    </div>
+    <button class="ie-tbtn ie-go-btn" id="ie-go"><span class="ie-icon-go">→</span> Go</button>
+  </div>
+
+  <div class="ie-content">
+    <h2 class="ie-h1">rjplaton.com</h2>
+    <p class="ie-lead">
+      a modern (non-IRC) version of this site is now available.<br>
+      <em>same person, different protocol.</em>
+    </p>
+    <p class="ie-text">
+      a real website. loads in a normal browser. no green text, no DCC
+      transfers, won't ever ask you for your a/s/l. just words on a page,
+      the way the late nineties promised it could be.
+    </p>
+    <div class="wp-actions">
+      <a class="wp-btn primary" href="https://rjplaton.com" target="_blank" rel="noopener noreferrer">
+        » open rjplaton.com
+      </a>
+      <button class="wp-btn" id="wp-later" type="button">maybe later</button>
+    </div>
+  </div>
+
+  <div class="ie-statusbar">
+    <span class="ie-status-text" id="ie-status-text">Done</span>
+    <span class="ie-status-zone">🔒 Internet</span>
+  </div>
+</div>
+
+<!-- NFO viewer modal -->
+<div class="nfo-overlay" id="nfo-overlay" role="dialog" aria-modal="true" aria-labelledby="nfo-title-text">
+  <div class="nfo-window">
+    <div class="titlebar">
+      <span class="icon" aria-hidden="true"></span>
+      <span class="title-text" id="nfo-title-text">FILE_ID.DIZ</span>
+      <span class="controls">
+        <span class="ctrl-btn" id="nfo-close" title="Close">×</span>
+      </span>
+    </div>
+    <div class="nfo-body" id="nfo-body"></div>
+  </div>
+</div>
+
+<!-- Win98 Taskbar -->
+<div class="taskbar" id="taskbar" aria-label="Win98 taskbar">
+  <button class="start-btn" id="start-btn" type="button">
+    <span class="start-flag" aria-hidden="true"></span>
+    <span class="start-label">Start</span>
+  </button>
+  <div class="task-divider" aria-hidden="true"></div>
+  <div class="task-buttons" id="task-buttons" role="list"></div>
+  <div class="task-tray" id="task-tray" aria-label="System tray">
+    <span class="tray-clock" id="tray-clock">--:--</span>
+  </div>
+</div>
+
+<!-- Start menu (hidden by default, toggled by Start button) -->
+<div class="start-menu hidden" id="start-menu" role="menu" aria-label="Start menu">
+  <div class="start-sidebar" aria-hidden="true">
+    <span class="start-sidebar-text">Windows<span class="start-sidebar-98">98</span></span>
+  </div>
+  <div class="start-items">
+    <div class="start-item start-item-submenu" data-submenu="programs" role="menuitem" tabindex="0">
+      <div class="start-item-icon dt-glyph-programs" aria-hidden="true"></div>
+      <div class="start-item-label"><u>P</u>rograms</div>
+      <div class="start-item-arrow">▶</div>
+    </div>
+    <div class="start-item" data-action="documents" role="menuitem" tabindex="0">
+      <div class="start-item-icon dt-glyph-docs" aria-hidden="true"></div>
+      <div class="start-item-label"><u>D</u>ocuments</div>
+      <div class="start-item-arrow">▶</div>
+    </div>
+    <div class="start-item" data-action="settings" role="menuitem" tabindex="0">
+      <div class="start-item-icon dt-glyph-settings" aria-hidden="true"></div>
+      <div class="start-item-label"><u>S</u>ettings</div>
+      <div class="start-item-arrow">▶</div>
+    </div>
+    <div class="start-item" data-action="find" role="menuitem" tabindex="0">
+      <div class="start-item-icon dt-glyph-find" aria-hidden="true"></div>
+      <div class="start-item-label"><u>F</u>ind</div>
+      <div class="start-item-arrow">▶</div>
+    </div>
+    <div class="start-sep"></div>
+    <div class="start-item" data-action="run" role="menuitem" tabindex="0">
+      <div class="start-item-icon dt-glyph-run" aria-hidden="true"></div>
+      <div class="start-item-label"><u>R</u>un...</div>
+    </div>
+    <div class="start-sep"></div>
+    <div class="start-item" data-action="shutdown" role="menuitem" tabindex="0">
+      <div class="start-item-icon dt-glyph-shutdown" aria-hidden="true"></div>
+      <div class="start-item-label">Sh<u>u</u>t Down...</div>
+    </div>
+  </div>
+  <!-- Programs submenu -->
+  <div class="start-submenu hidden" id="start-submenu-programs" role="menu" aria-label="Programs">
+    <div class="start-item" data-app="mirc" role="menuitem" tabindex="0">
+      <div class="start-item-icon dt-glyph-mirc-sm" aria-hidden="true"></div>
+      <div class="start-item-label">mIRC32</div>
+    </div>
+    <div class="start-item" data-app="winamp" role="menuitem" tabindex="0">
+      <div class="start-item-icon dt-glyph-winamp-sm" aria-hidden="true"></div>
+      <div class="start-item-label">WINAMP 2.91</div>
+    </div>
+    <div class="start-item" data-app="iexplore" role="menuitem" tabindex="0">
+      <div class="start-item-icon dt-glyph-ie-sm" aria-hidden="true"></div>
+      <div class="start-item-label">Internet Explorer</div>
+    </div>
+  </div>
+</div>
+
+<!-- Run dialog (hidden by default; pops from Start > Run...) -->
+<div class="run-dialog hidden" id="run-dialog" role="dialog" aria-label="Run">
+  <div class="run-title">
+    <span class="run-icon" aria-hidden="true">▶</span>
+    <span class="run-title-text">Run</span>
+    <span class="ctrl-btn" id="run-close" title="Close">×</span>
+  </div>
+  <div class="run-body">
+    <p class="run-desc">Type the name of a program, command, or channel command, and Windows will open it for you.</p>
+    <div class="run-row">
+      <label for="run-input">Open:</label>
+      <input id="run-input" type="text" placeholder="e.g. mirc, winamp, iexplore, !help" autocomplete="off">
+    </div>
+    <div class="run-actions">
+      <button class="wp-btn primary" id="run-ok">OK</button>
+      <button class="wp-btn" id="run-cancel">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Disconnected screen -->
+<div class="disconnected" id="disconnected" role="alertdialog">
+  <pre>
+*** Disconnected from irc.rjplaton.com (Quit: rjplaton)
+*** Session terminated.
+  </pre>
+  <div>You have left #rjplaton.</div>
+  <button id="reconnect-btn">[ /reconnect ]</button>
+</div>
+
+<script>
+/* ============================================================
+   #rjplaton :: client-side mIRC simulator
+   single-file. no deps. localStorage-free (per artifact rules
+   we treat this as a static page; keep state in memory).
+   ============================================================ */
+
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const messages   = $('messages');
+  const userlistEl = $('userlist');
+  const cmd        = $('cmd');
+  const xferEl     = $('xfer');
+  const xferLabel  = $('xfer-label');
+  const xferFill   = $('xfer-fill');
+  const xferPct    = $('xfer-pct');
+  const sbClock    = $('sb-clock');
+  const sbLag      = $('sb-lag');
+  const nfoOverlay = $('nfo-overlay');
+  const nfoBody    = $('nfo-body');
+  const nfoTitle   = $('nfo-title-text');
+  const disconnectedEl = $('disconnected');
+
+  // ---------- Channel state ----------
+  const YOU = 'rjplaton';
+  const BOT = '[fserv]';
+
+  const NICKS = [
+    { n: '[fserv]',    role: 'bot' },
+    { n: 'rjplaton',   role: 'op',    you: true },
+    { n: 'ph34r-',     role: 'op' },
+    { n: 'm1xt4pe',     role: 'voice' },
+    { n: 'w@rezKing',   role: 'voice' },
+    { n: 'sn00py',      role: 'voice' },
+    { n: 'mp3hunter',   role: 'voice' },
+    { n: 'bLuPin0y408', role: 'voice' },
+    { n: 'aZnBaByGrl88',role: 'voice' },
+    { n: 'Chhith2k',    role: 'voice' },
+    { n: 'xWingZeRo86x',role: 'voice' },
+    { n: 'h4x0r88',    role: 'normal' },
+    { n: 'anonymouse', role: 'normal' },
+    { n: 'scenelord',  role: 'normal' },
+    { n: 'kr3w_',      role: 'normal' },
+    { n: 'discjockey', role: 'normal' },
+    { n: '|sp00n|',    role: 'normal' },
+    { n: 'tapehead',   role: 'normal' },
+    { n: 'CDripper',   role: 'normal' },
+    { n: 'd4rkstar',   role: 'normal' },
+    { n: 'Pentium2',   role: 'normal' },
+    { n: 'lana_57',    role: 'normal' },
+    { n: 'AOLuser',    role: 'normal' },
+    { n: 'iso-9000',   role: 'normal' },
+    { n: 'razor1911',  role: 'normal' },
+    { n: 'cheez_it',   role: 'normal' },
+    { n: 'goth_kid',   role: 'normal' },
+    { n: 'BBQchamp',   role: 'normal' },
+    { n: 'sp1nbox',    role: 'normal' },
+    { n: 'qwerty99',   role: 'normal' },
+    { n: 'modemrider', role: 'normal' },
+    { n: 'icq2456712', role: 'normal' },
+  ];
+
+  function renderUserList() {
+    const sigil = (r) => r === 'op' ? '@' : r === 'voice' ? '+' : ' ';
+    const rank  = (r) => r === 'op' ? 0 : r === 'voice' ? 1 : r === 'bot' ? 2 : 3;
+    const sorted = [...NICKS].sort((a,b) => {
+      const ra = rank(a.role), rb = rank(b.role);
+      if (ra !== rb) return ra - rb;
+      return a.n.toLowerCase().localeCompare(b.n.toLowerCase());
+    });
+    const header = '— ' + sorted.length + ' users —';
+    let html = `<div class="header">${header}</div>`;
+    for (const u of sorted) {
+      const cls = u.you ? 'you' : (u.role === 'bot' ? 'bot' : u.role);
+      html += `<div class="user" data-nick="${u.n}">` +
+              `<span class="sigil ${u.role}">${sigil(u.role)}</span>` +
+              `<span class="nick ${cls}">${escape(u.n)}</span>` +
+              `</div>`;
+    }
+    userlistEl.innerHTML = html;
+  }
+
+  function escape(s) {
+    return String(s)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function ts() {
+    const d = new Date();
+    const pad = (n) => String(n).padStart(2,'0');
+    return `[${pad(d.getHours())}:${pad(d.getMinutes())}]`;
+  }
+
+  function append(html, opts = {}) {
+    const div = document.createElement('div');
+    div.className = 'msg';
+    div.innerHTML = html;
+    messages.appendChild(div);
+    if (!opts.noscroll) messages.scrollTop = messages.scrollHeight;
+  }
+
+  function nickSpan(nick) {
+    const u = NICKS.find(x => x.n === nick);
+    if (!u) return `<span class="nick">${escape(nick)}</span>`;
+    if (u.you)             return `<span class="nick you">${escape(nick)}</span>`;
+    if (u.role === 'op')   return `<span class="nick op">${escape(nick)}</span>`;
+    if (u.role === 'voice')return `<span class="nick voice">${escape(nick)}</span>`;
+    if (u.role === 'bot')  return `<span class="nick" style="color:var(--mirc-pink)">${escape(nick)}</span>`;
+    return `<span class="nick">${escape(nick)}</span>`;
+  }
+
+  function sigilFor(nick) {
+    const u = NICKS.find(x => x.n === nick);
+    if (!u) return '';
+    if (u.role === 'op') return '@';
+    if (u.role === 'voice') return '+';
+    return '';
+  }
+
+  function say(nick, text) {
+    const sigil = sigilFor(nick) || '';
+    const sigilHtml = sigil ? `<span style="color:var(--mirc-grey)">${sigil}</span>` : '';
+    append(
+      `<span class="ts">${ts()}</span> ` +
+      `<span class="ts">&lt;</span>${sigilHtml}${nickSpan(nick)}<span class="ts">&gt;</span> ` +
+      `${escape(text)}`
+    );
+  }
+
+  // linkify after escape: safe because https URLs don't contain HTML-dangerous chars
+  function linkify(escapedText) {
+    return escapedText.replace(
+      /(https?:\/\/[^\s<&]+)/g,
+      '<a href="$1" class="ext-link" target="_blank" rel="noopener noreferrer">$1</a>'
+    );
+  }
+  function system(text, opts = {}) {
+    const cls = 'system' + (opts.nudge ? ' nudge' : '');
+    append(`<span class="ts">${ts()}</span> <span class="${cls}">*** ${linkify(escape(text))}</span>`);
+  }
+  function notice(from, text, opts = {}) {
+    const cls = 'notice' + (opts.nudge ? ' nudge' : '');
+    append(`<span class="ts">${ts()}</span> <span class="${cls}">-${escape(from)}- ${linkify(escape(text))}</span>`);
+  }
+  function action(nick, text) {
+    append(`<span class="ts">${ts()}</span> <span class="action">* ${escape(nick)} ${escape(text)}</span>`);
+  }
+  function err(text)     { append(`<span class="ts">${ts()}</span> <span class="error">!! ${escape(text)}</span>`); }
+  function pre(text, klass='') {
+    const div = document.createElement('div');
+    div.className = 'pre ' + klass;
+    div.textContent = text;
+    messages.appendChild(div);
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  // ---------- File catalog (the "warez" — actually content) ----------
+  /* TODO: Reuben — swap these for your real bio / projects / links */
+  const FILES = [
+    {
+      idx: 1,
+      name: 'reuben_aboutme_v3.0.zip',
+      size: '4.2 MB',
+      tag:  '[ABOUT]',
+      desc: 'who is rjplaton',
+      nfo: aboutNfo()
+    },
+    {
+      idx: 2,
+      name: 'projects_pack_2026.zip',
+      size: '128.0 MB',
+      tag:  '[RELEASES]',
+      desc: 'shipped & shipping',
+      nfo: projectsNfo()
+    },
+    {
+      idx: 3,
+      name: 'rjplaton_resume_FINAL_FINAL_v7.pdf',
+      size: '184 KB',
+      tag:  '[CV]',
+      desc: 'one-page CV',
+      nfo: resumeNfo()
+    },
+    {
+      idx: 4,
+      name: 'contact.nfo',
+      size: '2 KB',
+      tag:  '[CTC]',
+      desc: 'how to reach me',
+      nfo: contactNfo()
+    },
+    {
+      idx: 5,
+      name: 'now_status.txt',
+      size: '1 KB',
+      tag:  '[NOW]',
+      desc: 'current /away message',
+      nfo: nowNfo()
+    },
+    {
+      idx: 6,
+      name: 'guestbook.cgi',
+      size: '6 KB',
+      tag:  '[FUN]',
+      desc: 'sign the guestbook',
+      nfo: guestbookNfo()
+    },
+    {
+      idx: 7,
+      name: '0day-greets.nfo',
+      size: '3 KB',
+      tag:  '[INFO]',
+      desc: 'shoutouts & influences',
+      nfo: greetsNfo()
+    },
+    {
+      idx: 8,
+      name: 'rules.txt',
+      size: '1 KB',
+      tag:  '[!]',
+      desc: 'channel rules — read first',
+      nfo: rulesNfo()
+    }
+  ];
+
+  function findFile(q) {
+    q = q.toLowerCase();
+    return FILES.filter(f =>
+      f.name.toLowerCase().includes(q) ||
+      f.desc.toLowerCase().includes(q) ||
+      f.tag.toLowerCase().includes(q));
+  }
+
+  // ---------- NFO content ----------
+  function nfoFrame(title, body) {
+    const top    = '╔══════════════════════════════════════════════════════════════════════════╗';
+    const bot    = '╚══════════════════════════════════════════════════════════════════════════╝';
+    const sep    = '╟──────────────────────────────────────────────────────────────────────────╢';
+    const wall   = '║';
+    const pad = (s, w=74) => {
+      s = s.replace(/\[[0-9;]*m/g,'');
+      const len = [...s].length;
+      const space = Math.max(0, w - len);
+      return s + ' '.repeat(space);
+    };
+    const lines = body.split('\n').map(l => `${wall} ${pad(l)} ${wall}`).join('\n');
+    return [
+      top,
+      `${wall} ${pad(' ' + title.toUpperCase())} ${wall}`,
+      sep,
+      lines,
+      bot
+    ].join('\n');
+  }
+
+  function aboutNfo() {
+    return nfoFrame('reuben_aboutme_v3.0 :: file_id.diz', `
+ release : reuben_aboutme_v3.0.zip
+ group   : -=[ rjp-net ]=-
+ date    : ${new Date().toISOString().slice(0,10)}
+ size    : 4.2 MB / 1 disk
+ type    : personal / non-fiction / true story
+
+ .---  who is rjplaton  -----------------------------.
+
+ [TODO] tell your story here.
+
+  rjplaton (a.k.a. Reuben) is a builder, designer, and
+  recovering channel op. he writes software, ships things,
+  and keeps a small corner of the internet running on pure
+  monospace and stubbornness.
+
+  fluent in: typography, taste, latency budgets, and
+  saying "no" to gradients on body text.
+
+  off-keyboard: [TODO — hobbies, music, weekend habits].
+
+ .----------------------------------------------------.
+
+ also distributed: ABOUT.TXT  README.1ST  hello.wav
+
+ [ press ESC or click × to close. /list for more files. ]
+`).trim();
+  }
+
+  function projectsNfo() {
+    return nfoFrame('projects_pack_2026 :: release notes', `
+ release : projects_pack_2026.zip
+ group   : -=[ rjp-net ]=-
+ size    : 128.0 MB / 8 disks
+ protect : none. take what you need.
+
+ ┌─[ contents ]────────────────────────────────────────┐
+
+   [01]  rjplaton.com         this site. you're in it.
+                              tech: pure html/css/js,
+                              0 deps, runs anywhere.
+
+   [02]  [TODO project two]   short description here.
+                              stack / role / impact.
+
+   [03]  [TODO project three] short description here.
+                              stack / role / impact.
+
+   [04]  [TODO side hack]     a small thing that brought
+                              you joy this year.
+
+ └─────────────────────────────────────────────────────┘
+
+  github  : github.com/rjplaton           (personal)
+  domain  : rjplaton.com
+  contact : !get contact.nfo
+
+  // greets to anyone who still ssh's into a box at 1am.
+`).trim();
+  }
+
+  function resumeNfo() {
+    return nfoFrame('resume :: rjplaton_resume_FINAL_FINAL_v7.pdf', `
+ ┌─[ rjplaton — short cv ]─────────────────────────────┐
+
+  NAME       reuben (rjplaton)
+  ROLE       [TODO — current title]
+  LOCATION   [TODO — city / remote]
+  STATUS     [TODO — open to chat? building? heads down?]
+
+ │
+ │  experience
+ │
+ │  20XX–now   [TODO — current company / role]
+ │             [TODO — one line about scope]
+ │
+ │  20XX–20XX  [TODO — previous role]
+ │             [TODO — one line about scope]
+ │
+ │  earlier    [TODO — one or two earlier highlights]
+ │
+ │  skills     [TODO — pick 6-10 sharp ones]
+ │  education  [TODO — school, year]
+ │
+ └─────────────────────────────────────────────────────┘
+
+  // grab the .pdf: !get rjplaton_resume_FINAL_FINAL_v7.pdf
+  // (yes the filename is a joke. the resume isn't.)
+`).trim();
+  }
+
+  function contactNfo() {
+    return nfoFrame('contact.nfo', `
+ ┌─[ how to reach me ]─────────────────────────────────┐
+
+   email      [TODO — personal email]
+   github     github.com/rjplaton          (personal)
+   site       rjplaton.com
+   bluesky    [TODO — handle]
+   linkedin   [TODO — slug]
+   irc        irc.rjplaton.com / #rjplaton  (you are here)
+
+ └─────────────────────────────────────────────────────┘
+
+   best contact times: [TODO — your tz / hours]
+
+   anti-spam      : no recruiters w/o a job spec
+   anti-pgp       : ok i'll set one up someday
+   prefers        : a thoughtful one-paragraph email
+
+   // for cold outreach: lead with the work, not the ask.
+`).trim();
+  }
+
+  function nowNfo() {
+    return nfoFrame('now / status', `
+ ┌─[ /away message ]───────────────────────────────────┐
+
+   * rjplaton is now away — auto-away (4 mins idle)
+   * away reason: building.
+
+ │  reading       [TODO — book or essay]
+ │  building      [TODO — what's on the bench]
+ │  listening     [TODO — album / artist on rotation]
+ │  watching      [TODO — show or film]
+ │  thinking abt  [TODO — current obsession]
+ │
+ │  last updated  ${new Date().toISOString().slice(0,10)}
+
+ └─────────────────────────────────────────────────────┘
+
+   // inspired by /now pages. honest, low-stakes,
+   // updated when the seasons change.
+`).trim();
+  }
+
+  function guestbookNfo() {
+    return nfoFrame('guestbook.cgi :: sign here', `
+ ┌─[ ★ sign the guestbook ★ ]──────────────────────────┐
+
+   ※ ph34r-       :: nice page. your <table> tags are
+                     showing tho. 6/10
+   ※ m1xt4pe      :: i remember when this whole channel
+                     was fields. ggwp
+   ※ AOLuser      :: how do i delete my account
+   ※ scenelord    :: greets from .nz. 0day forever.
+   ※ tapehead     :: dont upload to alt.binaries.this
+                     time pls
+   ※ [your name]  :: [TODO — leave the form here, or just
+                     say hi via !get contact.nfo]
+
+ └─────────────────────────────────────────────────────┘
+
+  // entries are vetted by an op. say something true.
+`).trim();
+  }
+
+  function greetsNfo() {
+    return nfoFrame('0day-greets.nfo', `
+ ┌─[ greetz & influences ]─────────────────────────────┐
+
+   ╔══════════════════════════════╗
+   ║  shoutouts to the operators  ║
+   ╚══════════════════════════════╝
+
+   to anyone who ever maintained a fserv at 2am --
+   to anyone who made a personal site that felt like a
+   place instead of a product --
+   to typography sites with three colors and one font --
+   to readme files that taught us how to read --
+
+   influences (in no order)
+   ──────────────────────────────
+     * the early web's small-page culture
+     * mIRC scripts written in pure /alias hell
+     * NFO art (ACiD, iCE, Razor, Fairlight)
+     * the ED tool, the /now movement, neocities
+     * making things by yourself for an audience of
+       three friends and a search engine
+
+   /motd ends here.
+
+ └─────────────────────────────────────────────────────┘
+`).trim();
+  }
+
+  function rulesNfo() {
+    return nfoFrame('#rjplaton :: rules.txt', `
+ ┌─[ channel rules ]───────────────────────────────────┐
+
+   01.  be kind. it's the cheapest thing in the budget.
+   02.  no actual warez. this is an aesthetic.
+   03.  no AOL CDs on the carpet.
+   04.  type in lowercase if you can. it just feels
+        better here.
+   05.  if you find a bug in this site, !get contact.nfo
+        and tell me. you'll get a hand-typed thank-you.
+   06.  /me is allowed but only if it's funny.
+   07.  the only correct way to leave is /quit reuben
+
+ └─────────────────────────────────────────────────────┘
+`).trim();
+  }
+
+  // ---------- Boot / connect sequence ----------
+  const BOOT = [
+    { delay: 50,  fn: () => system('Looking up irc.rjplaton.com...') },
+    { delay: 350, fn: () => system('Connecting to irc.rjplaton.com (6667)...') },
+    { delay: 500, fn: () => system('Connected. Now logging in...') },
+    { delay: 200, fn: () => notice('rjp-net','*** Checking ident...') },
+    { delay: 250, fn: () => notice('rjp-net','*** Found your hostname (cached)') },
+    { delay: 200, fn: () => notice('rjp-net','*** No ident response; username prefixed with ~') },
+    { delay: 350, fn: () => system('Welcome to rjp-net IRC, rjplaton!~rjp@h-127-0-0-1.rjplaton.com') },
+    { delay: 200, fn: () => system('Your host is irc.rjplaton.com, running version u4.0.10') },
+    { delay: 250, fn: () => system('This server was created Sat Aug 14 1999 at 03:14:15') },
+    { delay: 250, fn: () => system('There are 1 users and 0 invisible on 1 servers') },
+    { delay: 200, fn: () => system('Highest connection count: 1 (1 since startup)') },
+    { delay: 250, fn: () => system(`- ${new Date().toLocaleString()} Message of the Day -`) },
+    { delay: 200, fn: () => motd() },
+    { delay: 400, fn: () => system('End of /MOTD command.') },
+    { delay: 250, fn: () => system('rjplaton sets mode: +i') },
+    { delay: 300, fn: () => system('Now talking in #rjplaton') },
+    { delay: 200, fn: () => system('Topic is "0day mp3z, personal releases by @rjplaton :: type !rules :: !list :: !help"') },
+    { delay: 200, fn: () => system('Topic set by ph34r- on Sat Aug 14 1999 03:14:15') },
+    { delay: 250, fn: () => bannerArt() },
+    { delay: 350, fn: () => say(BOT, '*** rjp-net fserv online. type !list for releases, !rules first, !help for everything else.') },
+    { delay: 400, fn: () => say(BOT, '*** tip: click any filename in chat to DCC it.') },
+    { delay: 600, fn: () => action('rjplaton', 'cracks knuckles. welcome.') },
+    { delay: 100, fn: () => { startAmbient(); cmd.focus(); } }
+  ];
+
+  function motd() {
+    pre(
+`        ╓──────────────────────────────────────────────╖
+        ║   rjp-net :: a one-channel network           ║
+        ║   ────────────────────────────────────────   ║
+        ║   est. 1999 (give or take twenty-five years) ║
+        ║   home of #rjplaton — personal releases      ║
+        ║   /motd was last touched yesterday           ║
+        ╙──────────────────────────────────────────────╜`,
+      'banner');
+  }
+
+  function bannerArt() {
+    pre(
+`           ___  __  ___       __    ____  ____
+          / __\\/ / / _ \\___  / /__ / __/ / __/_______
+         / /_/ / / / // / _ \\/ / _ \\\\ \\  / _//___/ -_)
+         \\____/\\/  \\___/\\___/_/\\___/___/ /___/   \\__/
+
+                # r j p l a t o n  ::  irc.rjplaton.com
+        ───────────────────────────────────────────────
+          0day mp3z  ::  personal releases  ::  est.99
+        ───────────────────────────────────────────────
+              type  !list   to see today's drop
+              type  !help   to see all commands
+              type  !rules  before you do anything else`,
+      'banner');
+  }
+
+  function runBoot() {
+    let t = 0;
+    BOOT.forEach(step => {
+      t += step.delay;
+      setTimeout(step.fn, t);
+    });
+  }
+
+  // ---------- Ambient channel chatter ----------
+  const AMBIENT_LINES = [
+    ['ph34r-',     '!list'],
+    ['mp3hunter',  'anyone got the new release?'],
+    ['m1xt4pe',    'rjplaton: ty for the upload, was looking for that one'],
+    ['scenelord',  'queue is moving fast tonight'],
+    ['anonymouse', 'is the fserv up?'],
+    ['discjockey', 'a/s/l'],
+    ['CDripper',   '@rjplaton ping'],
+    ['h4x0r88',    'lol classic'],
+    ['kr3w_',      'brb getting pizza'],
+    ['tapehead',   '/me listens to a tape'],
+    ['lana_57',    'how do i download'],
+    ['AOLuser',    'sorry my modem disconnected'],
+    ['iso-9000',   '!find resume'],
+    ['Pentium2',   'who let the AOLuser in'],
+    ['BBQchamp',   'topic is fire'],
+    ['cheez_it',   'best channel on rjp-net (only channel on rjp-net)'],
+    ['sn00py',     '*yawn*'],
+    ['|sp00n|',    'ascii art still slaps'],
+    ['goth_kid',   'this site needs more black. oh wait'],
+    ['modemrider', '14.4k checking in'],
+    ['sp1nbox',    '!get contact.nfo'],
+    ['qwerty99',   'ty for the channel rules, hopping off']
+  ];
+
+  let ambientTimer = null;
+  let userQuiet = 0;
+  function startAmbient() {
+    const tick = () => {
+      // back off if user is actively typing/sending
+      const interval = userQuiet > 0 ? 4000 + Math.random()*4000
+                                     : 9000 + Math.random()*8000;
+      ambientTimer = setTimeout(() => {
+        if (Math.random() < 0.18) {
+          // join/part event
+          const pool = NICKS.filter(n => !n.you && n.role !== 'bot' && n.role !== 'op');
+          const u = pool[Math.floor(Math.random() * pool.length)];
+          if (Math.random() < 0.5) {
+            system(`${u.n} (${u.n}@h-${rand255()}-${rand255()}-${rand255()}-${rand255()}.rjplaton.com) has joined #rjplaton`);
+          } else {
+            system(`${u.n} has quit (${pickQuit()})`);
+          }
+        } else {
+          const [n, t] = AMBIENT_LINES[Math.floor(Math.random()*AMBIENT_LINES.length)];
+          if (t.startsWith('/me ')) action(n, t.slice(4));
+          else say(n, t);
+        }
+        userQuiet = Math.max(0, userQuiet - 1);
+        tick();
+      }, interval);
+    };
+    tick();
+  }
+
+  function rand255() { return Math.floor(Math.random()*255); }
+  function pickQuit() {
+    const reasons = [
+      'Ping timeout: 245 seconds',
+      'Connection reset by peer',
+      'Read error: EOF from client',
+      'Client Quit',
+      'Quit: brb',
+      'Quit: leaving',
+      'Excess Flood',
+      'Quit: mIRC32 v5.91 — get yours at www.mirc.com'
+    ];
+    return reasons[Math.floor(Math.random() * reasons.length)];
+  }
+
+  // ---------- DCC SEND simulator ----------
+  function dccSend(file) {
+    return new Promise(resolve => {
+      xferEl.classList.add('active');
+      xferLabel.textContent = `DCC SEND ${file.name} (${file.size}) — queue 1 of 1`;
+      xferFill.style.width = '0%';
+      xferPct.textContent = '0%';
+      system(`DCC Send from ${BOT}: ${file.name} [${file.size}] — accepting...`);
+      let p = 0;
+      const tick = setInterval(() => {
+        // jittery progress to feel real
+        p += 1.5 + Math.random() * 6;
+        if (p >= 100) {
+          p = 100;
+          xferFill.style.width = '100%';
+          xferPct.textContent = '100%';
+          clearInterval(tick);
+          setTimeout(() => {
+            system(`DCC Send ${file.name} complete (CRC ok)`);
+            xferEl.classList.remove('active');
+            resolve();
+          }, 240);
+          return;
+        }
+        xferFill.style.width = p.toFixed(0) + '%';
+        xferPct.textContent  = p.toFixed(0) + '%';
+      }, 60);
+    });
+  }
+
+  // ---------- NFO viewer ----------
+  function showNfo(file) {
+    nfoTitle.textContent = file.name + '  —  FILE_ID.DIZ';
+    nfoBody.textContent  = file.nfo;
+    nfoOverlay.classList.add('show');
+  }
+  function hideNfo() { nfoOverlay.classList.remove('show'); }
+  $('nfo-close').addEventListener('click', hideNfo);
+  nfoOverlay.addEventListener('click', (e) => { if (e.target === nfoOverlay) hideNfo(); });
+
+  // ---------- Commands ----------
+  const COMMANDS = {
+    '!help':  cmdHelp,
+    '!h':     cmdHelp,
+    '!list':  cmdList,
+    '!l':     cmdList,
+    '!find':  cmdFind,
+    '!f':     cmdFind,
+    '!get':   cmdGet,
+    '!g':     cmdGet,
+    '!queue': cmdQueue,
+    '!q':     cmdQueue,
+    '!about':    () => cmdGet('reuben_aboutme_v3.0.zip'),
+    '!projects': () => cmdGet('projects_pack_2026.zip'),
+    '!resume':   () => cmdGet('rjplaton_resume_FINAL_FINAL_v7.pdf'),
+    '!cv':       () => cmdGet('rjplaton_resume_FINAL_FINAL_v7.pdf'),
+    '!contact':  () => cmdGet('contact.nfo'),
+    '!now':      () => cmdGet('now_status.txt'),
+    '!greets':   () => cmdGet('0day-greets.nfo'),
+    '!rules':    () => cmdGet('rules.txt'),
+    '!motd':  () => motd(),
+    '!banner':() => bannerArt(),
+    '!whois': cmdWhois,
+    '!clear': () => { messages.innerHTML = ''; bannerArt(); },
+    '!cls':   () => { messages.innerHTML = ''; bannerArt(); },
+    '!ping':  () => notice(BOT, `PONG :rjplaton ${Math.round(20 + Math.random()*80)}ms`),
+    '!play':  () => { startPlayback(); },
+    '!pause': () => { pausePlayback(); },
+    '!stop':  () => { stopPlayback(); },
+    '!next':  () => { nextTrack(); if (isPlaying) { stopPlayback(); startPlayback(); } },
+    '!prev':  () => { prevTrack(); if (isPlaying) { stopPlayback(); startPlayback(); } },
+    '!np':    () => { const t = currentTrack(); say(BOT, `now playing: ${t.artist} — ${t.name} :: ${t.meta}`); },
+    '!mute':  () => { toggleMute(); },
+    '!modern':() => { notice('rjp-net', 'modern (non-IRC) version of this site: https://rjplaton.com', { nudge: true }); showWebportal({ flash: true }); },
+    '!web':   () => { notice('rjp-net', 'modern web version: https://rjplaton.com', { nudge: true }); showWebportal({ flash: true }); },
+    '!www':   () => { notice('rjp-net', 'modern web version: https://rjplaton.com', { nudge: true }); showWebportal({ flash: true }); },
+  };
+
+  function cmdHelp() {
+    pre(
+`-=[ #rjplaton command help ]=-
+   !list                   show all releases
+   !find <text>            search files by name/desc
+   !get  <file|index>      DCC the file (opens NFO viewer)
+   !queue                  show your DCC queue
+   !about     | !projects  shortcuts to top releases
+   !resume    | !cv        download the CV
+   !contact   | !now       contact card / current status
+   !rules     | !greets    channel rules / shoutouts
+   !motd      | !banner    re-print the MOTD / banner
+   !whois <nick>           pretend whois on any user
+   !clear                  clear scrollback
+   -- winamp / music --
+   !play | !pause | !stop  control the lofi player
+   !next | !prev           cycle through tracks
+   !np                     announce now playing
+   !mute                   mute / unmute audio
+   -- elsewhere --
+   !modern | !web | !www   open the modern site (rjplaton.com)
+   -- meta --
+   /me <action>            describe an action
+   /nick <name>            change your nick (cosmetic)
+   /quit [reason]          leave the channel
+   /reconnect              come back after /quit`, 'banner');
+  }
+
+  function cmdList() {
+    pre(
+`-=[ ${BOT} :: file listing for #rjplaton ]=-
+ #  tag         size       file
+ -- ----------- ---------- ----------------------------------------`, 'banner');
+    for (const f of FILES) {
+      const line = ` ${String(f.idx).padStart(2,'0')} ${f.tag.padEnd(11,' ')} ${f.size.padEnd(10,' ')} `;
+      const html = `<span class="pre">${escape(line)}</span>` +
+                   `<span class="file-link" data-file="${escape(f.name)}">${escape(f.name)}</span>` +
+                   `<span class="ts">  — ${escape(f.desc)}</span>`;
+      append(`${html}`);
+    }
+    append(`<span class="ts">${ts()}</span> <span class="system">*** end of !list — !get &lt;name|#&gt; to download. click any filename.</span>`);
+  }
+
+  function cmdFind(arg) {
+    const q = (arg || '').trim();
+    if (!q) { err('!find <text> — give me something to look for.'); return; }
+    const hits = findFile(q);
+    if (!hits.length) { say(BOT, `no matches for "${q}". try !list.`); return; }
+    say(BOT, `${hits.length} match${hits.length===1?'':'es'} for "${q}":`);
+    for (const f of hits) {
+      const html = `<span class="ts">${ts()}</span> ` +
+        `<span class="cmd-hint">[#${f.idx}]</span> ` +
+        `<span class="file-link" data-file="${escape(f.name)}">${escape(f.name)}</span>` +
+        ` <span class="ts">— ${escape(f.desc)} (${escape(f.size)})</span>`;
+      append(html);
+    }
+  }
+
+  async function cmdGet(arg) {
+    const q = (arg || '').toString().trim();
+    if (!q) { err('!get <file|index> — usage: !get 2  or  !get contact.nfo'); return; }
+    let file = null;
+    if (/^\d+$/.test(q)) file = FILES.find(f => f.idx === parseInt(q, 10));
+    if (!file) file = FILES.find(f => f.name.toLowerCase() === q.toLowerCase());
+    if (!file) {
+      const hits = findFile(q);
+      if (hits.length === 1) file = hits[0];
+    }
+    if (!file) { say(BOT, `no such file: "${q}". try !list or !find.`); return; }
+    say(BOT, `request accepted: ${file.name}. negotiating DCC...`);
+    await dccSend(file);
+    showNfo(file);
+  }
+
+  function cmdQueue() {
+    say(BOT, 'queue is empty. nice. (this is a single-user fserv, you are always #1.)');
+  }
+
+  function cmdWhois(arg) {
+    const target = (arg || '').trim() || 'rjplaton';
+    const u = NICKS.find(n => n.n.toLowerCase() === target.toLowerCase());
+    if (!u) { err(`No such nick: ${target}`); return; }
+
+    const isYou = !!u.you;
+    const role = u.role === 'op' ? 'IRC Operator (channel)' : u.role === 'voice' ? 'Voiced' : u.role === 'bot' ? 'Bot' : 'User';
+    const ip   = `${rand255()}.${rand255()}.${rand255()}.${rand255()}`;
+    const idle = isYou ? 0 : Math.floor(Math.random() * 9000);
+    const sign = isYou ? new Date().toUTCString() : 'Sat Aug 14 1999 03:14:15';
+
+    pre(
+`-=[ /whois ${u.n} ]=-
+ ${u.n} is ${u.n}@h-${ip.replace(/\./g,'-')}.rjplaton.com
+ ${u.n}  realname : ${isYou ? '[redacted by request]' : '★ rjp-net regular ★'}
+ ${u.n}  channels : @#rjplaton
+ ${u.n}  server   : irc.rjplaton.com [rjp-net IRC]
+ ${u.n}  status   : ${role}
+ ${u.n}  idle     : ${idle}s, signon: ${sign}
+ ${u.n}  end of /WHOIS list.`, 'banner');
+  }
+
+  // ---------- Slash commands ----------
+  function slash(cmdline) {
+    const m = cmdline.match(/^\/(\w+)\s*(.*)$/);
+    if (!m) return false;
+    const verb = m[1].toLowerCase();
+    const arg  = m[2];
+    if (verb === 'me')      { action(YOU, arg); return true; }
+    if (verb === 'nick')    {
+      if (!arg.trim()) { err('/nick <newnick>'); return true; }
+      // cosmetic only
+      const old = YOU;
+      const newnick = arg.trim().slice(0, 16);
+      const youUser = NICKS.find(u => u.you);
+      youUser.n = newnick;
+      system(`${old} is now known as ${newnick}`);
+      renderUserList();
+      return true;
+    }
+    if (verb === 'help')    { cmdHelp(); return true; }
+    if (verb === 'list')    { cmdList(); return true; }
+    if (verb === 'quit')    { doQuit(arg); return true; }
+    if (verb === 'clear' || verb === 'cls') { messages.innerHTML = ''; bannerArt(); return true; }
+    if (verb === 'reconnect') { reconnect(); return true; }
+    if (verb === 'topic')   { $('topic').textContent = `Topic for #rjplaton: ${arg || $('topic').textContent}`; return true; }
+    err(`Unknown command: /${verb} — try /help`);
+    return true;
+  }
+
+  function doQuit(reason) {
+    if (ambientTimer) clearTimeout(ambientTimer);
+    system(`${YOU} has quit (${reason || 'Quit: rjplaton'})`);
+    setTimeout(() => disconnectedEl.classList.add('show'), 600);
+  }
+  function reconnect() {
+    disconnectedEl.classList.remove('show');
+    messages.innerHTML = '';
+    runBoot();
+  }
+  $('reconnect-btn').addEventListener('click', reconnect);
+
+  // ---------- Input handler ----------
+  cmd.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter') return;
+    const line = cmd.value;
+    cmd.value = '';
+    if (!line.trim()) return;
+    userQuiet = 3;
+
+    // slash command?
+    if (line.startsWith('/')) {
+      slash(line);
+      return;
+    }
+    // bang command?
+    if (line.startsWith('!')) {
+      const m = line.match(/^(!\w+)(?:\s+(.*))?$/);
+      if (m) {
+        const fn = COMMANDS[m[1].toLowerCase()];
+        // echo the command as if the user typed it in chat
+        say(YOU, line);
+        if (fn) fn(m[2]);
+        else err(`Unknown command: ${m[1]} — try !help`);
+        return;
+      }
+    }
+    // normal chat
+    say(YOU, line);
+    // bot occasionally responds
+    setTimeout(() => maybeBotReply(line), 700 + Math.random()*1200);
+  });
+
+  function maybeBotReply(line) {
+    const l = line.toLowerCase();
+    if (/\bhi|hello|hey|yo\b/.test(l) && Math.random() < 0.7) {
+      const greets = ['hey rjplaton ✦', 'wb @rjplaton', 'channel op detected. salutes.', 'evening, op.'];
+      const who = NICKS.filter(n => !n.you && n.role !== 'bot');
+      const u = who[Math.floor(Math.random() * who.length)];
+      say(u.n, greets[Math.floor(Math.random() * greets.length)]);
+    } else if (/\?$/.test(line) && Math.random() < 0.4) {
+      say(BOT, 'try !help — i index commands not feelings.');
+    } else if (Math.random() < 0.18) {
+      const filler = ['+1', 'lol', 'true', 'word', 'this channel >>>', 'classic.'];
+      const who = NICKS.filter(n => !n.you && n.role !== 'bot');
+      const u = who[Math.floor(Math.random() * who.length)];
+      say(u.n, filler[Math.floor(Math.random()*filler.length)]);
+    }
+  }
+
+  // ---------- Click handlers (file links, user list) ----------
+  messages.addEventListener('click', (e) => {
+    const t = e.target.closest('.file-link');
+    if (!t) return;
+    const name = t.dataset.file;
+    cmdGet(name);
+  });
+  userlistEl.addEventListener('dblclick', (e) => {
+    const t = e.target.closest('.user');
+    if (!t) return;
+    const nick = t.dataset.nick;
+    cmd.value = `/whois ${nick}`;
+    cmd.focus();
+  });
+
+  // ---------- Status bar clock + lag jitter + winamp time ----------
+  function tickClock() {
+    const d = new Date();
+    const pad = (n) => String(n).padStart(2,'0');
+    sbClock.textContent = `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+    if (Math.random() < 0.12) {
+      const lag = Math.round(28 + Math.random() * 180);
+      sbLag.textContent = `Lag: ${lag}ms`;
+    }
+  }
+  setInterval(tickClock, 1000);
+  tickClock();
+
+  /* ============================================================
+     Lofi audio engine.
+     If MP3_URL is set, plays that file (routed through the lofi
+     lowpass + analyser so the EQ visualizer reacts to it).
+     If MP3_URL is null, falls back to an original Web Audio synth
+     (pentatonic ocarina-like lead, Am-F-C-G pads, soft kick,
+     sine bass, vinyl crackle, warm lowpass).
+     ============================================================ */
+  const MP3_URL = './assets/audio/song-of-storms-lofi.mp3';
+
+  const PLAYLIST = [
+    { name: 'song_of_storms_lofi.mp3', artist: 'rjplaton',  meta: 'lofi remix vol.1 (64kbps stereo)' },
+    { name: 'moonlit_grove.mp3',       artist: 'rjplaton',  meta: 'lofi mix vol.1' },
+    { name: 'ocarina_at_dusk.mp3',     artist: 'rjplaton',  meta: 'lofi mix vol.1' },
+    { name: 'the_lost_path.mp3',       artist: 'rjplaton',  meta: 'lofi mix vol.1' },
+    { name: 'windflower.mp3',          artist: 'rjplaton',  meta: 'lofi mix vol.1' },
+  ];
+  let trackIdx = 0;
+  function currentTrack() { return PLAYLIST[trackIdx]; }
+  function updateTrackTitle() {
+    const t = currentTrack();
+    $('wa-track').textContent = `★ ${t.artist} - ${t.name} ★ ${t.meta} ★ ripped on 56k ★ `;
+  }
+  function nextTrack() { trackIdx = (trackIdx + 1) % PLAYLIST.length; updateTrackTitle(); }
+  function prevTrack() { trackIdx = (trackIdx - 1 + PLAYLIST.length) % PLAYLIST.length; updateTrackTitle(); }
+  updateTrackTitle();
+
+  // ----- Audio state -----
+  let audioCtx = null;
+  let masterGain = null;
+  let lofiFilter = null;
+  let analyser = null;
+  let analyserData = null;
+  let mp3Audio = null;
+  let mp3Source = null;
+  let isPlaying = false;
+  let isMuted = false;
+  let playStartCtxTime = 0;   // ctx.currentTime when (re)started
+  let playElapsedAtPause = 0; // total elapsed at pause
+  let nextPhraseTime = 0;
+  let schedulerTimer = null;
+
+  // ----- Music theory bits -----
+  const BPM = 72;
+  const BEAT = 60 / BPM;
+  const PHRASE_BEATS = 32; // 8 bars
+  const PHRASE_DUR = PHRASE_BEATS * BEAT;
+  const midiToFreq = (m) => 440 * Math.pow(2, (m - 69) / 12);
+
+  // Original melody — A-minor pentatonic, modal flavoring with F (♭6).
+  // [midi, startBeat, durationBeats]
+  const MELODY = [
+    [69, 0, 1],  [72, 1, 1],  [76, 2, 2],
+    [74, 4, 1],  [72, 5, 1],  [69, 6, 2],
+    [67, 8, 1],  [69, 9, 1],  [72,10, 1], [74,11, 1],
+    [76,12, 3],
+    // phrase 2 (variation)
+    [69,16,1],  [72,17,1],  [74,18,1],  [76,19,1],
+    [77,20,1],  [76,21,3],
+    [72,24,2],  [69,26,2],
+    [69,28,3]
+  ];
+  // Pad chords: Am - F - C - G  (i - ♭VI - ♭III - ♭VII), 4 beats each
+  const CHORDS = [
+    [57,[0,3,7,12], 0,4],  [53,[0,4,7,12], 4,4],
+    [60,[0,4,7,12], 8,4],  [55,[0,4,7,12],12,4],
+    [57,[0,3,7,12],16,4],  [53,[0,4,7,12],20,4],
+    [60,[0,4,7,12],24,4],  [55,[0,4,7,12],28,4],
+  ];
+  const BASS = [
+    [45, 0,4], [41, 4,4], [48, 8,4], [43,12,4],
+    [45,16,4], [41,20,4], [48,24,4], [43,28,4],
+  ];
+  const KICK_BEATS = [];
+  for (let bar = 0; bar < 8; bar++) { KICK_BEATS.push(bar*4, bar*4 + 2); }
+
+  function ensureContext() {
+    if (audioCtx) return audioCtx;
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    audioCtx = new Ctx();
+
+    masterGain = audioCtx.createGain();
+    masterGain.gain.value = 0;
+
+    lofiFilter = audioCtx.createBiquadFilter();
+    lofiFilter.type = 'lowpass';
+    lofiFilter.frequency.value = 2400;
+    lofiFilter.Q.value = 0.6;
+
+    const comp = audioCtx.createDynamicsCompressor();
+    comp.threshold.value = -18;
+    comp.knee.value = 6;
+    comp.ratio.value = 4;
+    comp.attack.value = 0.005;
+    comp.release.value = 0.1;
+
+    analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 64;
+    analyser.smoothingTimeConstant = 0.78;
+    analyserData = new Uint8Array(analyser.frequencyBinCount);
+
+    masterGain.connect(lofiFilter);
+    lofiFilter.connect(comp);
+    comp.connect(analyser);
+    analyser.connect(audioCtx.destination);
+
+    // vinyl crackle: noise + highpass at low gain
+    const buf = audioCtx.createBuffer(1, audioCtx.sampleRate * 2, audioCtx.sampleRate);
+    const data = buf.getChannelData(0);
+    for (let i = 0; i < data.length; i++) {
+      data[i] = (Math.random() * 2 - 1) * (Math.random() < 0.02 ? 0.8 : 0.18);
+    }
+    const noise = audioCtx.createBufferSource();
+    noise.buffer = buf;
+    noise.loop = true;
+    const hp = audioCtx.createBiquadFilter();
+    hp.type = 'highpass';
+    hp.frequency.value = 1800;
+    const ng = audioCtx.createGain();
+    ng.gain.value = 0.022;
+    noise.connect(hp); hp.connect(ng); ng.connect(masterGain);
+    noise.start();
+
+    return audioCtx;
+  }
+
+  // --- Voicing helpers ---
+  function envADSR(node, t, dur, peak, attack=0.01, decay=0.05, sustain=0.6, release=0.1) {
+    const g = node.gain;
+    g.cancelScheduledValues(t);
+    g.setValueAtTime(0, t);
+    g.linearRampToValueAtTime(peak, t + attack);
+    g.linearRampToValueAtTime(peak * sustain, t + attack + decay);
+    g.setValueAtTime(peak * sustain, Math.max(t + attack + decay, t + dur - release));
+    g.exponentialRampToValueAtTime(0.0001, t + dur);
+  }
+
+  function playLeadNote(midi, t, durSec) {
+    const f = midiToFreq(midi);
+    const tri = audioCtx.createOscillator(); tri.type = 'triangle'; tri.frequency.value = f;
+    const sub = audioCtx.createOscillator(); sub.type = 'sine';     sub.frequency.value = f * 0.5;
+    const subGain = audioCtx.createGain(); subGain.gain.value = 0.55;
+    const lfo = audioCtx.createOscillator(); lfo.type = 'sine'; lfo.frequency.value = 5.4;
+    const lfoG = audioCtx.createGain(); lfoG.gain.value = 3.2;
+    lfo.connect(lfoG); lfoG.connect(tri.frequency); lfoG.connect(sub.frequency);
+
+    const env = audioCtx.createGain();
+    envADSR(env, t, durSec, 0.16, 0.04, 0.18, 0.55, 0.18);
+
+    tri.connect(env); sub.connect(subGain); subGain.connect(env);
+    env.connect(masterGain);
+
+    tri.start(t); sub.start(t); lfo.start(t);
+    const stopT = t + durSec + 0.05;
+    tri.stop(stopT); sub.stop(stopT); lfo.stop(stopT);
+  }
+
+  function playPad(rootMidi, intervals, t, durSec) {
+    const padFilter = audioCtx.createBiquadFilter();
+    padFilter.type = 'lowpass';
+    padFilter.frequency.value = 1100;
+    padFilter.Q.value = 0.5;
+    const env = audioCtx.createGain();
+    envADSR(env, t, durSec, 0.045, 0.7, 0.6, 0.85, 0.6);
+    padFilter.connect(env);
+    env.connect(masterGain);
+    for (const iv of intervals) {
+      const f = midiToFreq(rootMidi + iv);
+      const a = audioCtx.createOscillator(); a.type = 'sawtooth'; a.frequency.value = f;
+      const b = audioCtx.createOscillator(); b.type = 'sawtooth'; b.frequency.value = f * 1.005;
+      a.connect(padFilter); b.connect(padFilter);
+      a.start(t); b.start(t);
+      a.stop(t + durSec + 0.1); b.stop(t + durSec + 0.1);
+    }
+  }
+
+  function playBass(midi, t, durSec) {
+    const o = audioCtx.createOscillator(); o.type = 'sine'; o.frequency.value = midiToFreq(midi);
+    const o2 = audioCtx.createOscillator(); o2.type = 'triangle'; o2.frequency.value = midiToFreq(midi+12);
+    const g2 = audioCtx.createGain(); g2.gain.value = 0.18;
+    const env = audioCtx.createGain();
+    envADSR(env, t, durSec * 0.9, 0.16, 0.015, 0.3, 0.4, 0.2);
+    o.connect(env); o2.connect(g2); g2.connect(env);
+    env.connect(masterGain);
+    o.start(t); o2.start(t);
+    o.stop(t + durSec); o2.stop(t + durSec);
+  }
+
+  function playKick(t) {
+    const o = audioCtx.createOscillator(); o.type = 'sine';
+    o.frequency.setValueAtTime(140, t);
+    o.frequency.exponentialRampToValueAtTime(42, t + 0.13);
+    const env = audioCtx.createGain();
+    env.gain.setValueAtTime(0, t);
+    env.gain.linearRampToValueAtTime(0.45, t + 0.005);
+    env.gain.exponentialRampToValueAtTime(0.001, t + 0.22);
+    o.connect(env); env.connect(masterGain);
+    o.start(t); o.stop(t + 0.25);
+
+    // soft click/snap layer
+    const click = audioCtx.createOscillator(); click.type = 'square'; click.frequency.value = 1600;
+    const cg = audioCtx.createGain();
+    cg.gain.setValueAtTime(0.04, t);
+    cg.gain.exponentialRampToValueAtTime(0.0001, t + 0.012);
+    click.connect(cg); cg.connect(masterGain);
+    click.start(t); click.stop(t + 0.02);
+  }
+
+  function schedulePhrase(phraseStart) {
+    for (const [m, b, d] of MELODY) playLeadNote(m, phraseStart + b * BEAT, d * BEAT * 0.95);
+    for (const [r, iv, b, d] of CHORDS) playPad(r, iv, phraseStart + b * BEAT, d * BEAT);
+    for (const [m, b, d] of BASS)   playBass(m, phraseStart + b * BEAT, d * BEAT * 0.92);
+    for (const b of KICK_BEATS)     playKick(phraseStart + b * BEAT);
+  }
+
+  function scheduler() {
+    if (!audioCtx) return;
+    while (nextPhraseTime < audioCtx.currentTime + 0.6) {
+      schedulePhrase(nextPhraseTime);
+      nextPhraseTime += PHRASE_DUR;
+    }
+  }
+
+  function startPlayback() {
+    ensureContext();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    if (isPlaying) return;
+    isPlaying = true;
+    $('winamp').classList.remove('idle', 'paused');
+    $('winamp').classList.add('live');
+
+    if (MP3_URL) {
+      if (!mp3Audio) {
+        mp3Audio = new Audio(MP3_URL);
+        mp3Audio.loop = true;
+        // crossOrigin only set for explicit external URLs that have CORS headers.
+        // Same-origin / relative paths must NOT set it (would break createMediaElementSource).
+        if (/^https?:\/\//i.test(MP3_URL)) {
+          mp3Audio.crossOrigin = 'anonymous';
+        }
+        try {
+          mp3Source = audioCtx.createMediaElementSource(mp3Audio);
+          mp3Source.connect(masterGain);
+        } catch (e) {
+          // CORS-tainted (cross-origin without proper headers) — let the audio play
+          // directly through <audio>, but no analyser/lofi filter routing.
+          console.warn('mp3 playback bypassing Web Audio graph:', e.message);
+        }
+      }
+      mp3Audio.play().catch((err) => {
+        say(BOT, `*** could not start mp3 playback: ${err.message}. retry the ► button. ***`);
+      });
+    } else {
+      nextPhraseTime = audioCtx.currentTime + 0.12;
+      scheduler();
+      schedulerTimer = setInterval(scheduler, 250);
+    }
+
+    playStartCtxTime = audioCtx.currentTime;
+    masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
+    masterGain.gain.setValueAtTime(masterGain.gain.value, audioCtx.currentTime);
+    masterGain.gain.linearRampToValueAtTime(isMuted ? 0 : 0.65, audioCtx.currentTime + 0.5);
+
+    const t = currentTrack();
+    say(BOT, `*** now spinning :: ${t.artist} — ${t.name} :: ${t.meta} ***`);
+  }
+
+  function pausePlayback() {
+    if (!isPlaying || !audioCtx) return;
+    isPlaying = false;
+    playElapsedAtPause += audioCtx.currentTime - playStartCtxTime;
+    if (schedulerTimer) { clearInterval(schedulerTimer); schedulerTimer = null; }
+    if (mp3Audio) mp3Audio.pause();
+    masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
+    masterGain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.18);
+    $('winamp').classList.remove('live');
+    $('winamp').classList.add('paused');
+    say(BOT, '*** paused. mood: contemplative. ***');
+  }
+
+  function stopPlayback() {
+    if (audioCtx && isPlaying) {
+      pausePlayback();
+    }
+    playElapsedAtPause = 0;
+    $('wa-time').textContent = '0:00';
+    $('winamp').classList.remove('live', 'paused');
+    $('winamp').classList.add('idle');
+    if (mp3Audio) { mp3Audio.currentTime = 0; }
+    // freeze bars at 0
+    const bars = document.querySelectorAll('#wa-bars i');
+    bars.forEach(b => { b.style.height = '6%'; });
+  }
+
+  function toggleMute() {
+    isMuted = !isMuted;
+    if (audioCtx && masterGain) {
+      masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
+      masterGain.gain.linearRampToValueAtTime(
+        isMuted ? 0 : (isPlaying ? 0.65 : 0),
+        audioCtx.currentTime + 0.15
+      );
+    }
+    $('winamp').classList.toggle('muted', isMuted);
+    notice(BOT, isMuted ? 'audio muted (channel still online)' : 'audio unmuted');
+  }
+
+  // ----- Animation loop: drive EQ bars from analyser, update time -----
+  const waBars = Array.from(document.querySelectorAll('#wa-bars i'));
+  function tick() {
+    if (audioCtx && analyser && isPlaying) {
+      analyser.getByteFrequencyData(analyserData);
+      // map frequency bins to bars (skip bin 0 = DC)
+      const N = waBars.length;
+      const usableBins = analyserData.length - 1;
+      for (let i = 0; i < N; i++) {
+        const idx = 1 + Math.floor(i * usableBins / N);
+        const v = analyserData[idx] / 255;       // 0..1
+        const h = Math.max(6, Math.min(100, 8 + Math.pow(v, 0.85) * 92));
+        waBars[i].style.height = h + '%';
+      }
+      // time display:
+      //   MP3 mode → follow actual track position (resets on loop)
+      //   synth mode → wall-clock since play started
+      let elapsed;
+      if (MP3_URL && mp3Audio) {
+        elapsed = mp3Audio.currentTime;
+      } else {
+        elapsed = playElapsedAtPause + (audioCtx.currentTime - playStartCtxTime);
+      }
+      const m = Math.floor(elapsed / 60);
+      const s = Math.floor(elapsed % 60);
+      $('wa-time').textContent = `${m}:${String(s).padStart(2,'0')}`;
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+  // ----- Wire up Winamp buttons -----
+  $('wa-play').addEventListener('click',  () => startPlayback());
+  $('wa-pause').addEventListener('click', () => pausePlayback());
+  $('wa-stop').addEventListener('click',  () => stopPlayback());
+  $('wa-next').addEventListener('click',  () => {
+    nextTrack();
+    if (isPlaying) { stopPlayback(); startPlayback(); }
+  });
+  $('wa-prev').addEventListener('click',  () => {
+    prevTrack();
+    if (isPlaying) { stopPlayback(); startPlayback(); }
+  });
+  $('wa-mute').addEventListener('click',  () => toggleMute());
+  // (wa-close handler is wired in the window-manager block below — minimizes,
+  // does NOT pause music)
+
+  // ESC closes NFO
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && nfoOverlay.classList.contains('show')) hideNfo();
+    // Refocus input from anywhere
+    if (e.key === '/' && document.activeElement !== cmd) {
+      // let / start a slash command from anywhere
+      cmd.focus();
+    }
+  });
+
+  // ---------- Generic window manager (taskbar minimize/restore) ----------
+  // States per window:
+  //   "shown"      → window visible
+  //   "minimized"  → window hidden, taskbar button present (recoverable)
+  //   "dismissed"  → window hidden, no taskbar entry (only webportal uses this)
+  const taskButtonsEl = $('task-buttons');
+  const WINDOWS = {
+    mirc:      { el: $('mirc-window'), iconClass: 'tb-icon-irc',   label: '#rjplaton'             },
+    winamp:    { el: $('winamp'),      iconClass: 'tb-icon-music', label: 'WINAMP 2.91'           },
+    webportal: { el: $('webportal'),   iconClass: 'tb-icon-globe', label: 'rjplaton.com — modern' },
+  };
+  const winState = { mirc: 'shown', winamp: 'shown', webportal: 'shown' };
+
+  function makeTaskbarButton(id) {
+    if (document.getElementById(`tb-btn-${id}`)) return;
+    const meta = WINDOWS[id];
+    const btn = document.createElement('button');
+    btn.id = `tb-btn-${id}`;
+    btn.className = 'task-button';
+    btn.type = 'button';
+    btn.setAttribute('role', 'listitem');
+    btn.innerHTML =
+      `<span class="tb-icon ${meta.iconClass}" aria-hidden="true"></span>` +
+      `<span class="tb-label">${meta.label}</span>`;
+    btn.addEventListener('click', () => restoreWindow(id, { flash: true }));
+    taskButtonsEl.appendChild(btn);
+  }
+  function removeTaskbarButton(id) {
+    const btn = document.getElementById(`tb-btn-${id}`);
+    if (btn) btn.remove();
+  }
+  function flashTaskbarButton(id) {
+    const btn = document.getElementById(`tb-btn-${id}`);
+    if (!btn) return;
+    btn.classList.remove('attention');
+    void btn.offsetWidth;
+    btn.classList.add('attention');
+  }
+
+  function minimizeWindow(id) {
+    WINDOWS[id].el.classList.add('hidden');
+    winState[id] = 'minimized';
+    makeTaskbarButton(id);
+  }
+  function restoreWindow(id, { flash = false } = {}) {
+    WINDOWS[id].el.classList.remove('hidden');
+    winState[id] = 'shown';
+    removeTaskbarButton(id);
+    if (flash) {
+      const el = WINDOWS[id].el;
+      el.classList.remove('attention');
+      void el.offsetWidth;
+      el.classList.add('attention');
+    }
+    if (id === 'mirc') cmd.focus();
+  }
+  function dismissWindow(id) {
+    WINDOWS[id].el.classList.add('hidden');
+    winState[id] = 'dismissed';
+    removeTaskbarButton(id);
+  }
+
+  // Webportal-specific aliases (keep existing call sites working)
+  const showWebportal     = (opts) => restoreWindow('webportal', opts);
+  const minimizeWebportal = ()    => minimizeWindow('webportal');
+  const dismissWebportal  = ()    => dismissWindow('webportal');
+
+  // ----- Title-bar wiring -----
+  // mIRC '_' minimize → just hide IRC, leave modern client alone
+  $('mirc-min-btn').addEventListener('click', () => minimizeWindow('mirc'));
+  // mIRC '×' close → hide IRC AND surface modern client centered
+  // (the simulation is "done"; here's the actual website)
+  $('close-btn').addEventListener('click', () => {
+    minimizeWindow('mirc');
+    restoreWindow('webportal', { flash: true });
+    notice('explorer', 'mIRC32 has been closed. The modern web client is your new home → https://rjplaton.com');
+  });
+  // Winamp '_' minimize → keep music playing, hide to taskbar
+  $('wa-min').addEventListener('click', () => minimizeWindow('winamp'));
+  // Winamp '×' close → stop music, dismiss (no taskbar entry).
+  // To re-launch: Start → Programs → WINAMP 2.91, or Run → "winamp"
+  $('wa-close').addEventListener('click', () => {
+    stopPlayback();
+    dismissWindow('winamp');
+  });
+  // Webportal '×' → minimize ; "maybe later" → fully dismiss
+  $('wp-close').addEventListener('click', () => minimizeWindow('webportal'));
+  $('wp-later').addEventListener('click', () => dismissWindow('webportal'));
+
+  // ----- Initial state: webportal starts minimized, waiting in the taskbar -----
+  minimizeWindow('webportal');
+
+  // ---------- Start menu ----------
+  const startMenuEl  = $('start-menu');
+  const startBtnEl   = $('start-btn');
+  const programsSubEl = $('start-submenu-programs');
+
+  function openStartMenu() {
+    startMenuEl.classList.remove('hidden');
+    startBtnEl.classList.add('pressed');
+  }
+  function closeStartMenu() {
+    startMenuEl.classList.add('hidden');
+    programsSubEl.classList.add('hidden');
+    startBtnEl.classList.remove('pressed');
+  }
+  function toggleStartMenu() {
+    if (startMenuEl.classList.contains('hidden')) openStartMenu();
+    else closeStartMenu();
+  }
+  startBtnEl.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleStartMenu();
+  });
+  // Outside click closes start menu
+  document.addEventListener('click', (e) => {
+    if (!startMenuEl.contains(e.target) && !startBtnEl.contains(e.target)) {
+      closeStartMenu();
+    }
+  });
+  // Esc closes start menu
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !startMenuEl.classList.contains('hidden')) {
+      closeStartMenu();
+    }
+  });
+
+  // Programs flyout
+  const programsItem = startMenuEl.querySelector('[data-submenu="programs"]');
+  programsItem.addEventListener('mouseenter', () => programsSubEl.classList.remove('hidden'));
+  programsItem.addEventListener('click', (e) => {
+    e.stopPropagation();
+    programsSubEl.classList.toggle('hidden');
+  });
+  // Hovering any non-Programs top-level item hides the flyout
+  startMenuEl.querySelectorAll('.start-items > .start-item:not([data-submenu])').forEach(item => {
+    item.addEventListener('mouseenter', () => programsSubEl.classList.add('hidden'));
+  });
+
+  // Programs submenu items (mIRC32 / WINAMP / Internet Explorer)
+  function launchApp(app) {
+    closeStartMenu();
+    if (app === 'mirc')          restoreWindow('mirc');
+    else if (app === 'winamp')   restoreWindow('winamp');
+    else if (app === 'iexplore') restoreWindow('webportal', { flash: true });
+  }
+  programsSubEl.querySelectorAll('[data-app]').forEach(item => {
+    item.addEventListener('click', (e) => {
+      e.stopPropagation();
+      launchApp(item.dataset.app);
+    });
+  });
+
+  // Top-level start menu actions (Run, Shut Down, etc.)
+  startMenuEl.querySelectorAll('.start-items > .start-item[data-action]').forEach(item => {
+    item.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const action = item.dataset.action;
+      closeStartMenu();
+      if (action === 'shutdown') {
+        doQuit('Shut Down...');
+      } else if (action === 'run') {
+        openRunDialog();
+      } else {
+        notice('explorer', `${action} is not yet ported to the web (this isn't a real OS, sorry).`);
+      }
+    });
+  });
+
+  // ---------- Run dialog ----------
+  const runDialogEl = $('run-dialog');
+  const runInputEl  = $('run-input');
+  function openRunDialog() {
+    runDialogEl.classList.remove('hidden');
+    runInputEl.value = '';
+    setTimeout(() => runInputEl.focus(), 0);
+  }
+  function closeRunDialog() { runDialogEl.classList.add('hidden'); }
+  $('run-close').addEventListener('click', closeRunDialog);
+  $('run-cancel').addEventListener('click', closeRunDialog);
+  $('run-ok').addEventListener('click', () => runSubmit());
+  runInputEl.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); runSubmit(); }
+    if (e.key === 'Escape') closeRunDialog();
+  });
+  function runSubmit() {
+    const v = runInputEl.value.trim();
+    closeRunDialog();
+    if (!v) return;
+    const lower = v.toLowerCase().replace(/\.exe$/, '');
+    if (lower === 'mirc' || lower === 'mirc32') {
+      restoreWindow('mirc');
+    } else if (lower === 'winamp') {
+      restoreWindow('winamp');
+    } else if (lower === 'iexplore' || lower === 'internet explorer') {
+      restoreWindow('webportal', { flash: true });
+    } else if (lower === 'cmd' || lower === 'command' || lower === 'command.com') {
+      notice('explorer', 'cmd is not installed on this system. try !help in #rjplaton instead.');
+    } else if (lower === 'shutdown' || lower === 'shutdown -s') {
+      doQuit('Shut Down...');
+    } else if (v.startsWith('!') || v.startsWith('/')) {
+      // forward to the IRC channel input
+      restoreWindow('mirc');
+      cmd.value = v;
+      cmd.focus();
+    } else if (/^https?:\/\//i.test(v) || lower === 'rjplaton.com') {
+      const url = /^https?:\/\//i.test(v) ? v : 'https://rjplaton.com';
+      window.open(url, '_blank', 'noopener,noreferrer');
+    } else {
+      notice('explorer',
+        `Cannot find the file '${v}' (or one of its components). Make sure the path and filename are correct and that all required libraries are available.`);
+    }
+  }
+
+  // ---------- Desktop icons ----------
+  document.querySelectorAll('.dt-icon').forEach(icon => {
+    icon.addEventListener('click', (e) => {
+      e.stopPropagation();
+      document.querySelectorAll('.dt-icon').forEach(i => i.classList.remove('selected'));
+      icon.classList.add('selected');
+    });
+    icon.addEventListener('dblclick', (e) => {
+      e.stopPropagation();
+      launchDesktopIcon(icon.dataset.app);
+    });
+    icon.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        launchDesktopIcon(icon.dataset.app);
+      }
+    });
+  });
+  function launchDesktopIcon(app) {
+    if      (app === 'mirc')         restoreWindow('mirc');
+    else if (app === 'iexplore')     restoreWindow('webportal', { flash: true });
+    else if (app === 'my-computer')  notice('explorer', 'My Computer: drive C: appears to be missing. (this is fine.)');
+    else if (app === 'recycle')      notice('explorer', 'Recycle Bin is empty. (you have great instincts.)');
+    else if (app === 'rjplaton-url') window.open('https://rjplaton.com', '_blank', 'noopener,noreferrer');
+    else if (app === 'aoe2')         notice('explorer', 'Age of Empires II: please insert disc 1 of 2 into drive D: to play. — wololo');
+    else if (app === 'starcraft')    notice('explorer', 'StarCraft: insert StarCraft CD into drive D:. (or type "show me the money" — but not here.)');
+    else if (app === 'simcity')      notice('explorer', 'SimCity 2000: not enough memory to start a city. close other applications and try again. (cheat: !iamacheater)');
+    else if (app === 'snes')         notice('explorer', 'ZSNES: scanning C:\\\\roms\\\\... 0 .smc files found. (you forgot to download them. legally, of course.)');
+  }
+  // Click on empty desktop area deselects icons
+  document.body.addEventListener('click', (e) => {
+    if (!e.target.closest('.dt-icon')) {
+      document.querySelectorAll('.dt-icon').forEach(i => i.classList.remove('selected'));
+    }
+  });
+
+  // ---------- IE5 toolbar buttons ----------
+  const ieStatusEl = $('ie-status-text');
+  function ieGo() {
+    ieStatusEl.textContent = 'Connecting to https://rjplaton.com...';
+    window.open('https://rjplaton.com', '_blank', 'noopener,noreferrer');
+    setTimeout(() => { ieStatusEl.textContent = 'Done'; }, 1400);
+  }
+  $('ie-go').addEventListener('click', ieGo);
+  $('ie-home').addEventListener('click', ieGo);
+  $('ie-refresh').addEventListener('click', () => {
+    ieStatusEl.textContent = 'Refreshing...';
+    setTimeout(() => { ieStatusEl.textContent = 'Done'; }, 700);
+  });
+  $('ie-stop').addEventListener('click', () => {
+    ieStatusEl.textContent = 'Stopped';
+  });
+  // Address bar: pressing Enter "navigates"
+  $('ie-address').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); ieGo(); }
+  });
+
+  // ---------- Tray clock (12-hour AM/PM) ----------
+  const trayClockEl = $('tray-clock');
+  function tickTrayClock() {
+    const d = new Date();
+    let h = d.getHours();
+    const m = d.getMinutes();
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    h = h % 12; if (h === 0) h = 12;
+    trayClockEl.textContent = `${h}:${String(m).padStart(2,'0')} ${ampm}`;
+  }
+  setInterval(tickTrayClock, 1000);
+  tickTrayClock();
+
+  // ---------- Periodic "service notice" nudge ----------
+  // Fires every 60s regardless of user activity. Always posts a chat notice
+  // with a clickable link. Visual cue depends on modal state:
+  //   shown      → flash the modal's title bar
+  //   minimized  → flash the taskbar button
+  //   dismissed  → no visual (chat only — user explicitly closed)
+  const NUDGE_INTERVAL_MS = 60 * 1000;
+  const NUDGE_LINES = [
+    'modern (non-IRC) version of this site is live at https://rjplaton.com — try it',
+    'prefer a normal-looking webpage? https://rjplaton.com (still me, less green)',
+    'looking for words on a page instead of a channel window? https://rjplaton.com',
+    'tip: rjplaton.com is the same person, quieter format → https://rjplaton.com',
+    'modern web client available at https://rjplaton.com — for muggles, normies, recruiters',
+    'service notice: bookmark https://rjplaton.com for the boring-browser version',
+  ];
+  let nudgeIdx = 0;
+
+  function fireNudge() {
+    if (disconnectedEl.classList.contains('show')) return;
+    notice('rjp-net', NUDGE_LINES[nudgeIdx % NUDGE_LINES.length], { nudge: true });
+    nudgeIdx++;
+    if (winState.webportal === 'shown') {
+      const el = WINDOWS.webportal.el;
+      el.classList.remove('attention');
+      void el.offsetWidth;
+      el.classList.add('attention');
+    } else if (winState.webportal === 'minimized') {
+      flashTaskbarButton('webportal');
+    }
+  }
+  setInterval(fireNudge, NUDGE_INTERVAL_MS);
+
+  // (mIRC close-btn is wired in the window-manager block above — minimizes
+  // mIRC and brings up the modern-client modal centered.)
+
+  // ---------- Go ----------
+  renderUserList();
+  runBoot();
+
+  // expose for debugging in console
+  window.__rjp = { COMMANDS, FILES, NICKS };
+})();
+</script>
+
+</body>
+</html>
