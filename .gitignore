@@ -12,6 +12,8 @@
 
 # Workspace-only notes (not for the public repo)
 PROJECT_NOTES.md
+CLAUDE.md
+.claude/
 
 # Logs
 *.log
