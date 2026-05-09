@@ -597,6 +597,46 @@
   }
   /* Muted indicator */
   .winamp.muted .wa-controls #wa-mute { color: #ff6b3b; text-decoration: line-through; }
+  /* PL button highlights when the playlist drawer is open */
+  .winamp.show-playlist .wa-controls #wa-pl { color: #00ff66; text-shadow: 0 0 3px #00ff66; }
+
+  /* ---------- Winamp playlist drawer ---------- */
+  .winamp .wa-playlist {
+    display: none;
+    background: #000;
+    border: 1px solid #1a1a1a;
+    margin: 0 4px 4px 4px;
+    max-height: 160px;
+    overflow-y: auto;
+    font-family: "Lucida Console", monospace;
+    font-size: 10px;
+  }
+  .winamp.show-playlist .wa-playlist { display: block; }
+  .winamp .wa-playlist-header {
+    background: #1a1a1a;
+    color: #888;
+    padding: 3px 6px;
+    font-size: 9px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    border-bottom: 1px solid #2a2a2a;
+  }
+  .winamp .wa-playlist-row {
+    display: grid;
+    grid-template-columns: 22px 1fr 38px;
+    gap: 6px;
+    padding: 2px 6px;
+    color: #ccc;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .winamp .wa-playlist-row:hover { background: rgba(255,255,255,0.06); color: #fff; }
+  .winamp .wa-playlist-row.current { background: #001a00; color: #00ff66; text-shadow: 0 0 2px #00ff66; }
+  .winamp .wa-playlist-row .pl-idx { color: #888; }
+  .winamp .wa-playlist-row.current .pl-idx { color: #00ff66; }
+  .winamp .wa-playlist-row .pl-title { overflow: hidden; text-overflow: ellipsis; }
+  .winamp .wa-playlist-row .pl-time { color: #666; text-align: right; }
 
   /* Hide rules for minimize-to-taskbar */
   .mirc-window.hidden,
@@ -1403,6 +1443,42 @@
     border-bottom: 1px solid var(--win98-light);
   }
 
+  /* ---------- Win98 shutdown sequence (Start → Shut Down) ---------- */
+  .shutdown-overlay {
+    position: fixed; inset: 0;
+    background: #000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    z-index: 9999;
+    user-select: none;
+    cursor: default;
+  }
+  .shutdown-overlay.show { display: flex; }
+  .shutdown-overlay .shutdown-please,
+  .shutdown-overlay .shutdown-safe { display: none; text-align: center; }
+  .shutdown-overlay.phase-please .shutdown-please { display: block; }
+  .shutdown-overlay.phase-safe   .shutdown-safe   { display: block; cursor: pointer; }
+  .shutdown-overlay .shutdown-please {
+    color: #fff;
+    font-family: "MS Sans Serif", Tahoma, sans-serif;
+    font-size: 14px;
+    letter-spacing: 0.02em;
+  }
+  .shutdown-overlay .shutdown-please .win98-flag {
+    margin: 0 auto 22px;
+    display: block;
+  }
+  .shutdown-overlay .shutdown-safe {
+    color: #d68440;
+    font-family: "Fixedsys", "Lucida Console", "Consolas", "Courier New", monospace;
+    font-size: 26px;
+    line-height: 1.35;
+    text-shadow: 0 0 1px #d68440;
+    padding: 0 24px;
+  }
+
   /* ---------- Responsive: collapse user list on narrow ---------- */
   @media (max-width: 760px) {
     .userlist { display: none; }
@@ -1502,7 +1578,7 @@
 
     <div class="chat-pane">
       <div class="topic" id="topic">
-        Topic for #rjplaton: 0day mp3z, personal releases by @rjplaton :: type !rules :: !list :: !help
+        Topic for #rjplaton: 0day mp3z, personal releases by @rjplaton :: type /rules :: /list :: /help
       </div>
 
       <div class="messages" id="messages" aria-live="polite"></div>
@@ -1514,7 +1590,7 @@
       </div>
 
       <div class="input-row">
-        <span class="input-prompt">&lt;<span class="op">@</span>rjplaton&gt;</span>
+        <span class="input-prompt" id="input-prompt">&lt;<span class="nick-name" id="input-prompt-nick">guest</span>&gt;</span>
         <input id="cmd" type="text" autocomplete="off" spellcheck="false"
                placeholder="type a message or /help" autofocus>
       </div>
@@ -1560,8 +1636,9 @@
     <span id="wa-stop"  title="Stop">■</span>
     <span id="wa-next"  title="Next track">►►|</span>
     <span style="margin-left:auto;" id="wa-mute" title="Mute">EQ</span>
-    <span title="Playlist">PL</span>
+    <span id="wa-pl" title="Playlist">PL</span>
   </div>
+  <div class="wa-playlist" id="wa-playlist" aria-label="Winamp playlist"></div>
 </div>
 
 <!-- Web portal: full IE5 browser chrome wrapping the modern-client landing -->
@@ -1716,7 +1793,7 @@
     <p class="run-desc">Type the name of a program, command, or channel command, and Windows will open it for you.</p>
     <div class="run-row">
       <label for="run-input">Open:</label>
-      <input id="run-input" type="text" placeholder="e.g. mirc, winamp, iexplore, !help" autocomplete="off">
+      <input id="run-input" type="text" placeholder="e.g. mirc, winamp, iexplore, /help" autocomplete="off">
     </div>
     <div class="run-actions">
       <button class="wp-btn primary" id="run-ok">OK</button>
@@ -1728,11 +1805,29 @@
 <!-- Disconnected screen -->
 <div class="disconnected" id="disconnected" role="alertdialog">
   <pre>
-*** Disconnected from irc.rjplaton.com (Quit: rjplaton)
+*** Disconnected from irc.rjplaton.com (Connection reset by peer)
 *** Session terminated.
   </pre>
   <div>You have left #rjplaton.</div>
   <button id="reconnect-btn">[ /reconnect ]</button>
+</div>
+
+<!-- Win98 shutdown overlay (easter egg) -->
+<div class="shutdown-overlay" id="shutdown-overlay" role="alertdialog" aria-hidden="true">
+  <div class="shutdown-please">
+    <svg class="win98-flag" viewBox="0 0 80 80" width="64" height="64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <g transform="skewX(-14) translate(10 4)">
+        <rect x="0"  y="0"  width="30" height="30" fill="#ff3b3b"/>
+        <rect x="32" y="0"  width="30" height="30" fill="#5fd24f"/>
+        <rect x="0"  y="32" width="30" height="30" fill="#2f7be6"/>
+        <rect x="32" y="32" width="30" height="30" fill="#ffd23a"/>
+      </g>
+    </svg>
+    Please wait while your computer shuts down.
+  </div>
+  <div class="shutdown-safe">
+    It&#39;s now safe to turn off<br>your computer.
+  </div>
 </div>
 
 <script>
@@ -1759,12 +1854,13 @@
   const disconnectedEl = $('disconnected');
 
   // ---------- Channel state ----------
-  const YOU = 'rjplaton';
+  // Visitor joins #rjplaton as a guest. rjplaton himself is an op + AI-clone proxy in-channel.
+  const YOU = 'Guest_' + Math.floor(1000 + Math.random() * 9000);
   const BOT = '[fserv]';
 
   const NICKS = [
     { n: '[fserv]',    role: 'bot' },
-    { n: 'rjplaton',   role: 'op',    you: true },
+    { n: 'rjplaton',   role: 'op' },
     { n: 'ph34r-',     role: 'op' },
     { n: 'm1xt4pe',     role: 'voice' },
     { n: 'w@rezKing',   role: 'voice' },
@@ -2046,7 +2142,7 @@
 
   github  : github.com/rjplaton           (personal)
   domain  : rjplaton.com
-  contact : !get contact.nfo
+  contact : /get contact.nfo
 
   // greets to anyone who still ssh's into a box at 1am.
 `).trim();
@@ -2077,7 +2173,7 @@
  │
  └─────────────────────────────────────────────────────┘
 
-  // grab the .pdf: !get rjplaton_resume_FINAL_FINAL_v7.pdf
+  // grab the .pdf: /get rjplaton_resume_FINAL_FINAL_v7.pdf
   // (yes the filename is a joke. the resume isn't.)
 `).trim();
   }
@@ -2140,7 +2236,7 @@
    ※ tapehead     :: dont upload to alt.binaries.this
                      time pls
    ※ [your name]  :: [TODO — leave the form here, or just
-                     say hi via !get contact.nfo]
+                     say hi via /get contact.nfo]
 
  └─────────────────────────────────────────────────────┘
 
@@ -2186,7 +2282,7 @@
    03.  no AOL CDs on the carpet.
    04.  type in lowercase if you can. it just feels
         better here.
-   05.  if you find a bug in this site, !get contact.nfo
+   05.  if you find a bug in this site, /get contact.nfo
         and tell me. you'll get a hand-typed thank-you.
    06.  /me is allowed but only if it's funny.
    07.  the only correct way to leave is /quit reuben
@@ -2203,7 +2299,7 @@
     { delay: 200, fn: () => notice('rjp-net','*** Checking ident...') },
     { delay: 250, fn: () => notice('rjp-net','*** Found your hostname (cached)') },
     { delay: 200, fn: () => notice('rjp-net','*** No ident response; username prefixed with ~') },
-    { delay: 350, fn: () => system('Welcome to rjp-net IRC, rjplaton!~rjp@h-127-0-0-1.rjplaton.com') },
+    { delay: 350, fn: () => system(`Welcome to rjp-net IRC, ${YOU}!~guest@h-127-0-0-1.rjplaton.com`) },
     { delay: 200, fn: () => system('Your host is irc.rjplaton.com, running version u4.0.10') },
     { delay: 250, fn: () => system('This server was created Sat Aug 14 1999 at 03:14:15') },
     { delay: 250, fn: () => system('There are 1 users and 0 invisible on 1 servers') },
@@ -2211,14 +2307,17 @@
     { delay: 250, fn: () => system(`- ${new Date().toLocaleString()} Message of the Day -`) },
     { delay: 200, fn: () => motd() },
     { delay: 400, fn: () => system('End of /MOTD command.') },
-    { delay: 250, fn: () => system('rjplaton sets mode: +i') },
+    { delay: 250, fn: () => system(`${YOU} sets mode: +i`) },
     { delay: 300, fn: () => system('Now talking in #rjplaton') },
-    { delay: 200, fn: () => system('Topic is "0day mp3z, personal releases by @rjplaton :: type !rules :: !list :: !help"') },
+    { delay: 200, fn: () => system('Topic is "0day mp3z, personal releases by @rjplaton :: type /rules :: /list :: /help"') },
     { delay: 200, fn: () => system('Topic set by ph34r- on Sat Aug 14 1999 03:14:15') },
     { delay: 250, fn: () => bannerArt() },
-    { delay: 350, fn: () => say(BOT, '*** rjp-net fserv online. type !list for releases, !rules first, !help for everything else.') },
+    { delay: 350, fn: () => say(BOT, '*** rjp-net fserv online. type /list for releases, /rules first, /help for everything else.') },
     { delay: 400, fn: () => say(BOT, '*** tip: click any filename in chat to DCC it.') },
     { delay: 600, fn: () => action('rjplaton', 'cracks knuckles. welcome.') },
+    { delay: 1100, fn: () => say('rjplaton', `oh heads up ${YOU} -- it's not really me here, it's my AI clone rofl. real rjplaton is afk irl.`) },
+    { delay: 700, fn: () => say('rjplaton', `tour is in chat: try /whois rjplaton, /about, /projects, /resume, /contact, /now :)`) },
+    { delay: 800, fn: () => system(`rjplaton is now away — auto-away (afk irl)`) },
     { delay: 100, fn: () => { startAmbient(); cmd.focus(); } }
   ];
 
@@ -2245,9 +2344,9 @@
         ───────────────────────────────────────────────
           0day mp3z  ::  personal releases  ::  est.99
         ───────────────────────────────────────────────
-              type  !list   to see today's drop
-              type  !help   to see all commands
-              type  !rules  before you do anything else`,
+              type  /list   to see today's drop
+              type  /help   to see all commands
+              type  /rules  before you do anything else`,
       'banner');
   }
 
@@ -2261,7 +2360,7 @@
 
   // ---------- Ambient channel chatter ----------
   const AMBIENT_LINES = [
-    ['ph34r-',     '!list'],
+    ['ph34r-',     '/list'],
     ['mp3hunter',  'anyone got the new release?'],
     ['m1xt4pe',    'rjplaton: ty for the upload, was looking for that one'],
     ['scenelord',  'queue is moving fast tonight'],
@@ -2273,7 +2372,7 @@
     ['tapehead',   '/me listens to a tape'],
     ['lana_57',    'how do i download'],
     ['AOLuser',    'sorry my modem disconnected'],
-    ['iso-9000',   '!find resume'],
+    ['iso-9000',   '/find resume'],
     ['Pentium2',   'who let the AOLuser in'],
     ['BBQchamp',   'topic is fire'],
     ['cheez_it',   'best channel on rjp-net (only channel on rjp-net)'],
@@ -2281,7 +2380,7 @@
     ['|sp00n|',    'ascii art still slaps'],
     ['goth_kid',   'this site needs more black. oh wait'],
     ['modemrider', '14.4k checking in'],
-    ['sp1nbox',    '!get contact.nfo'],
+    ['sp1nbox',    '/get contact.nfo'],
     ['qwerty99',   'ty for the channel rules, hopping off']
   ];
 
@@ -2371,63 +2470,62 @@
 
   // ---------- Commands ----------
   const COMMANDS = {
-    '!help':  cmdHelp,
-    '!h':     cmdHelp,
-    '!list':  cmdList,
-    '!l':     cmdList,
-    '!find':  cmdFind,
-    '!f':     cmdFind,
-    '!get':   cmdGet,
-    '!g':     cmdGet,
-    '!queue': cmdQueue,
-    '!q':     cmdQueue,
-    '!about':    () => cmdGet('reuben_aboutme_v3.0.zip'),
-    '!projects': () => cmdGet('projects_pack_2026.zip'),
-    '!resume':   () => cmdGet('rjplaton_resume_FINAL_FINAL_v7.pdf'),
-    '!cv':       () => cmdGet('rjplaton_resume_FINAL_FINAL_v7.pdf'),
-    '!contact':  () => cmdGet('contact.nfo'),
-    '!now':      () => cmdGet('now_status.txt'),
-    '!greets':   () => cmdGet('0day-greets.nfo'),
-    '!rules':    () => cmdGet('rules.txt'),
-    '!motd':  () => motd(),
-    '!banner':() => bannerArt(),
-    '!whois': cmdWhois,
-    '!clear': () => { messages.innerHTML = ''; bannerArt(); },
-    '!cls':   () => { messages.innerHTML = ''; bannerArt(); },
-    '!ping':  () => notice(BOT, `PONG :rjplaton ${Math.round(20 + Math.random()*80)}ms`),
-    '!play':  () => { startPlayback(); },
-    '!pause': () => { pausePlayback(); },
-    '!stop':  () => { stopPlayback(); },
-    '!next':  () => { nextTrack(); if (isPlaying) { stopPlayback(); startPlayback(); } },
-    '!prev':  () => { prevTrack(); if (isPlaying) { stopPlayback(); startPlayback(); } },
-    '!np':    () => { const t = currentTrack(); say(BOT, `now playing: ${t.artist} — ${t.name} :: ${t.meta}`); },
-    '!mute':  () => { toggleMute(); },
-    '!modern':() => { notice('rjp-net', 'modern (non-IRC) version of this site: https://rjplaton.com', { nudge: true }); showWebportal({ flash: true }); },
-    '!web':   () => { notice('rjp-net', 'modern web version: https://rjplaton.com', { nudge: true }); showWebportal({ flash: true }); },
-    '!www':   () => { notice('rjp-net', 'modern web version: https://rjplaton.com', { nudge: true }); showWebportal({ flash: true }); },
+    '/help':  cmdHelp,
+    '/h':     cmdHelp,
+    '/list':  cmdList,
+    '/l':     cmdList,
+    '/clear': () => { messages.innerHTML = ''; bannerArt(); },
+    '/cls':   () => { messages.innerHTML = ''; bannerArt(); },
+    '/find':  cmdFind,
+    '/f':     cmdFind,
+    '/get':   cmdGet,
+    '/g':     cmdGet,
+    '/queue': cmdQueue,
+    '/about':    () => cmdGet('reuben_aboutme_v3.0.zip'),
+    '/projects': () => cmdGet('projects_pack_2026.zip'),
+    '/resume':   () => cmdGet('rjplaton_resume_FINAL_FINAL_v7.pdf'),
+    '/cv':       () => cmdGet('rjplaton_resume_FINAL_FINAL_v7.pdf'),
+    '/contact':  () => cmdGet('contact.nfo'),
+    '/now':      () => cmdGet('now_status.txt'),
+    '/greets':   () => cmdGet('0day-greets.nfo'),
+    '/rules':    () => cmdGet('rules.txt'),
+    '/motd':  () => motd(),
+    '/banner':() => bannerArt(),
+    '/whois': cmdWhois,
+    '/ping':  () => notice(BOT, `PONG :${YOU} ${Math.round(20 + Math.random()*80)}ms`),
+    '/play':  () => { startPlayback(); },
+    '/pause': () => { pausePlayback(); },
+    '/stop':  () => { stopPlayback(); },
+    '/next':  () => { nextTrack(); if (isPlaying) { stopPlayback(); startPlayback(); } },
+    '/prev':  () => { prevTrack(); if (isPlaying) { stopPlayback(); startPlayback(); } },
+    '/np':    () => { const t = currentTrack(); say(BOT, `now playing: ${t.name} :: ${t.meta}`); },
+    '/mute':  () => { toggleMute(); },
+    '/modern':() => { notice('rjp-net', 'modern (non-IRC) version of this site: https://rjplaton.com', { nudge: true }); showWebportal({ flash: true }); },
+    '/web':   () => { notice('rjp-net', 'modern web version: https://rjplaton.com', { nudge: true }); showWebportal({ flash: true }); },
+    '/www':   () => { notice('rjp-net', 'modern web version: https://rjplaton.com', { nudge: true }); showWebportal({ flash: true }); },
   };
 
   function cmdHelp() {
     pre(
 `-=[ #rjplaton command help ]=-
-   !list                   show all releases
-   !find <text>            search files by name/desc
-   !get  <file|index>      DCC the file (opens NFO viewer)
-   !queue                  show your DCC queue
-   !about     | !projects  shortcuts to top releases
-   !resume    | !cv        download the CV
-   !contact   | !now       contact card / current status
-   !rules     | !greets    channel rules / shoutouts
-   !motd      | !banner    re-print the MOTD / banner
-   !whois <nick>           pretend whois on any user
-   !clear                  clear scrollback
+   /list                   show all releases
+   /find <text>            search files by name/desc
+   /get  <file|index>      DCC the file (opens NFO viewer)
+   /queue                  show your DCC queue
+   /about     | /projects  shortcuts to top releases
+   /resume    | /cv        download the CV
+   /contact   | /now       contact card / current status
+   /rules     | /greets    channel rules / shoutouts
+   /motd      | /banner    re-print the MOTD / banner
+   /whois <nick>           pretend whois on any user
+   /clear                  clear scrollback
    -- winamp / music --
-   !play | !pause | !stop  control the lofi player
-   !next | !prev           cycle through tracks
-   !np                     announce now playing
-   !mute                   mute / unmute audio
+   /play | /pause | /stop  control the lofi player
+   /next | /prev           cycle through tracks
+   /np                     announce now playing
+   /mute                   mute / unmute audio
    -- elsewhere --
-   !modern | !web | !www   open the modern site (rjplaton.com)
+   /modern | /web | /www   open the modern site (rjplaton.com)
    -- meta --
    /me <action>            describe an action
    /nick <name>            change your nick (cosmetic)
@@ -2447,14 +2545,14 @@
                    `<span class="ts">  — ${escape(f.desc)}</span>`;
       append(`${html}`);
     }
-    append(`<span class="ts">${ts()}</span> <span class="system">*** end of !list — !get &lt;name|#&gt; to download. click any filename.</span>`);
+    append(`<span class="ts">${ts()}</span> <span class="system">*** end of /list — /get &lt;name|#&gt; to download. click any filename.</span>`);
   }
 
   function cmdFind(arg) {
     const q = (arg || '').trim();
-    if (!q) { err('!find <text> — give me something to look for.'); return; }
+    if (!q) { err('/find <text> — give me something to look for.'); return; }
     const hits = findFile(q);
-    if (!hits.length) { say(BOT, `no matches for "${q}". try !list.`); return; }
+    if (!hits.length) { say(BOT, `no matches for "${q}". try /list.`); return; }
     say(BOT, `${hits.length} match${hits.length===1?'':'es'} for "${q}":`);
     for (const f of hits) {
       const html = `<span class="ts">${ts()}</span> ` +
@@ -2467,7 +2565,7 @@
 
   async function cmdGet(arg) {
     const q = (arg || '').toString().trim();
-    if (!q) { err('!get <file|index> — usage: !get 2  or  !get contact.nfo'); return; }
+    if (!q) { err('/get <file|index> — usage: /get 2  or  /get contact.nfo'); return; }
     let file = null;
     if (/^\d+$/.test(q)) file = FILES.find(f => f.idx === parseInt(q, 10));
     if (!file) file = FILES.find(f => f.name.toLowerCase() === q.toLowerCase());
@@ -2475,7 +2573,7 @@
       const hits = findFile(q);
       if (hits.length === 1) file = hits[0];
     }
-    if (!file) { say(BOT, `no such file: "${q}". try !list or !find.`); return; }
+    if (!file) { say(BOT, `no such file: "${q}". try /list or /find.`); return; }
     say(BOT, `request accepted: ${file.name}. negotiating DCC...`);
     await dccSend(file);
     showNfo(file);
@@ -2525,19 +2623,19 @@
       renderUserList();
       return true;
     }
-    if (verb === 'help')    { cmdHelp(); return true; }
-    if (verb === 'list')    { cmdList(); return true; }
     if (verb === 'quit')    { doQuit(arg); return true; }
-    if (verb === 'clear' || verb === 'cls') { messages.innerHTML = ''; bannerArt(); return true; }
     if (verb === 'reconnect') { reconnect(); return true; }
     if (verb === 'topic')   { $('topic').textContent = `Topic for #rjplaton: ${arg || $('topic').textContent}`; return true; }
+    // Channel/bot commands: dispatch through the COMMANDS table.
+    const fn = COMMANDS['/' + verb];
+    if (fn) { fn(arg); return true; }
     err(`Unknown command: /${verb} — try /help`);
     return true;
   }
 
   function doQuit(reason) {
     if (ambientTimer) clearTimeout(ambientTimer);
-    system(`${YOU} has quit (${reason || 'Quit: rjplaton'})`);
+    system(`${YOU} has quit (${reason || 'Quit: Leaving'})`);
     setTimeout(() => disconnectedEl.classList.add('show'), 600);
   }
   function reconnect() {
@@ -2547,6 +2645,31 @@
   }
   $('reconnect-btn').addEventListener('click', reconnect);
 
+  // ---------- Win98 shutdown sequence (Start → Shut Down) ----------
+  const shutdownOverlay = $('shutdown-overlay');
+  let shutdownPhaseTimer = null;
+  function shutDown() {
+    document.querySelectorAll('audio').forEach(a => { try { a.pause(); } catch(_){} });
+    if (ambientTimer) clearTimeout(ambientTimer);
+    shutdownOverlay.classList.remove('phase-safe');
+    shutdownOverlay.classList.add('show', 'phase-please');
+    shutdownOverlay.setAttribute('aria-hidden', 'false');
+    if (shutdownPhaseTimer) clearTimeout(shutdownPhaseTimer);
+    shutdownPhaseTimer = setTimeout(() => {
+      shutdownOverlay.classList.remove('phase-please');
+      shutdownOverlay.classList.add('phase-safe');
+    }, 2200);
+  }
+  function dismissShutdown() {
+    if (!shutdownOverlay.classList.contains('phase-safe')) return;
+    shutdownOverlay.classList.remove('show', 'phase-please', 'phase-safe');
+    shutdownOverlay.setAttribute('aria-hidden', 'true');
+  }
+  shutdownOverlay.addEventListener('click', dismissShutdown);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && shutdownOverlay.classList.contains('phase-safe')) dismissShutdown();
+  });
+
   // ---------- Input handler ----------
   cmd.addEventListener('keydown', (e) => {
     if (e.key !== 'Enter') return;
@@ -2555,43 +2678,82 @@
     if (!line.trim()) return;
     userQuiet = 3;
 
-    // slash command?
+    // slash command (IRC client commands + channel/bot commands all live here)
+    // ! prefix is a silent alias for / so muscle-memory typers aren't punished.
     if (line.startsWith('/')) {
       slash(line);
       return;
     }
-    // bang command?
     if (line.startsWith('!')) {
-      const m = line.match(/^(!\w+)(?:\s+(.*))?$/);
-      if (m) {
-        const fn = COMMANDS[m[1].toLowerCase()];
-        // echo the command as if the user typed it in chat
-        say(YOU, line);
-        if (fn) fn(m[2]);
-        else err(`Unknown command: ${m[1]} — try !help`);
-        return;
-      }
+      slash('/' + line.slice(1));
+      return;
     }
     // normal chat
     say(YOU, line);
-    // bot occasionally responds
+    // someone in channel may overhear and react/quote
+    maybeOverhear(line);
+    // bot occasionally responds (greet / filler)
     setTimeout(() => maybeBotReply(line), 700 + Math.random()*1200);
   });
 
   function maybeBotReply(line) {
     const l = line.toLowerCase();
     if (/\bhi|hello|hey|yo\b/.test(l) && Math.random() < 0.7) {
-      const greets = ['hey rjplaton ✦', 'wb @rjplaton', 'channel op detected. salutes.', 'evening, op.'];
+      const greets = [`hey ${YOU}`, `wb`, `o/`, `welcome to #rjplaton`, `evening`, `new face!`, `hi ${YOU}, lurking?`];
       const who = NICKS.filter(n => !n.you && n.role !== 'bot');
       const u = who[Math.floor(Math.random() * who.length)];
       say(u.n, greets[Math.floor(Math.random() * greets.length)]);
     } else if (/\?$/.test(line) && Math.random() < 0.4) {
-      say(BOT, 'try !help — i index commands not feelings.');
+      say(BOT, 'try /help — i index commands not feelings.');
     } else if (Math.random() < 0.18) {
       const filler = ['+1', 'lol', 'true', 'word', 'this channel >>>', 'classic.'];
       const who = NICKS.filter(n => !n.you && n.role !== 'bot');
       const u = who[Math.floor(Math.random() * who.length)];
       say(u.n, filler[Math.floor(Math.random()*filler.length)]);
+    }
+  }
+
+  // Channel banter: a couple of users overhear the visitor's message and react.
+  // Fires ~30% of the time on chat lines. Skips greetings (handled by maybeBotReply)
+  // so the channel doesn't pile three reactions on top of "hi".
+  function maybeOverhear(line) {
+    if (line.length < 2) return;
+    if (/\b(hi|hello|hey|yo|sup|hola)\b/i.test(line)) return;
+    if (Math.random() > 0.30) return;
+    const others = NICKS.filter(n => !n.you && n.role !== 'bot');
+    if (others.length < 2) return;
+    const shuffled = [...others].sort(() => Math.random() - 0.5);
+    const a = shuffled[0];
+    const b = shuffled[1];
+
+    const reactions = [
+      `wait what`,
+      `huh?`,
+      `what do you mean ${YOU}`,
+      `lol ${YOU}`,
+      `${YOU} wat`,
+      `respectfully, ${YOU}, what`,
+      `${YOU}: explain pls`,
+      `${YOU}: same`,
+      `${YOU}: ^ this`,
+      `did ${YOU} mean to say that out loud`,
+      `${YOU}: based`,
+      `${YOU} pls translate`,
+    ];
+    setTimeout(() => say(a.n, reactions[Math.floor(Math.random() * reactions.length)]),
+               900 + Math.random() * 900);
+
+    if (Math.random() < 0.55) {
+      const quote = line.length > 80 ? line.slice(0, 80) + '...' : line;
+      const followups = [
+        `pretty sure they said "${quote}" :p`,
+        `^ they said "${quote}"`,
+        `i think ${YOU} said "${quote}" lol`,
+        `quoted: <${YOU}> ${quote}`,
+        `they literally typed "${quote}" wat lol`,
+      ];
+      setTimeout(() => say(b.n, followups[Math.floor(Math.random() * followups.length)]),
+                 2400 + Math.random() * 1100);
     }
   }
 
@@ -2634,21 +2796,62 @@
   const MP3_URL = './assets/audio/song-of-storms-lofi.mp3';
 
   const PLAYLIST = [
-    { name: 'song_of_storms_lofi.mp3', artist: 'rjplaton',  meta: 'lofi remix vol.1 (64kbps stereo)' },
-    { name: 'moonlit_grove.mp3',       artist: 'rjplaton',  meta: 'lofi mix vol.1' },
-    { name: 'ocarina_at_dusk.mp3',     artist: 'rjplaton',  meta: 'lofi mix vol.1' },
-    { name: 'the_lost_path.mp3',       artist: 'rjplaton',  meta: 'lofi mix vol.1' },
-    { name: 'windflower.mp3',          artist: 'rjplaton',  meta: 'lofi mix vol.1' },
+    { name: 'song_of_storms_lofi.mp3',     artist: 'rjplaton',  meta: 'zelda — lofi remix vol.1',          url: './assets/audio/song-of-storms-lofi.mp3' },
+    { name: 'ff7_main_theme_lofi.mp3',     artist: 'rjplaton',  meta: 'final fantasy vii — lofi hiphop',  url: './assets/audio/ff7-main-theme-lofi.mp3' },
+    { name: 'moonlight_densetsu_lofi.mp3', artist: 'rjplaton',  meta: 'sailor moon — lofi',                url: './assets/audio/moonlight-densetsu-lofi.mp3' },
+    { name: 'pokemon_theme_lofi.mp3',      artist: 'rjplaton',  meta: 'pokémon theme — lofi',              url: './assets/audio/pokemon-theme-lofi.mp3' },
   ];
   let trackIdx = 0;
   function currentTrack() { return PLAYLIST[trackIdx]; }
   function updateTrackTitle() {
     const t = currentTrack();
-    $('wa-track').textContent = `★ ${t.artist} - ${t.name} ★ ${t.meta} ★ ripped on 56k ★ `;
+    $('wa-track').textContent = `★ ${t.name} ★ ${t.meta} ★ ripped on 56k ★ `;
   }
-  function nextTrack() { trackIdx = (trackIdx + 1) % PLAYLIST.length; updateTrackTitle(); }
-  function prevTrack() { trackIdx = (trackIdx - 1 + PLAYLIST.length) % PLAYLIST.length; updateTrackTitle(); }
+  function nextTrack() { trackIdx = (trackIdx + 1) % PLAYLIST.length; updateTrackTitle(); renderPlaylist(); }
+  function prevTrack() { trackIdx = (trackIdx - 1 + PLAYLIST.length) % PLAYLIST.length; updateTrackTitle(); renderPlaylist(); }
+
+  // Render the playlist drawer rows from PLAYLIST, marking the current track.
+  function renderPlaylist() {
+    const list = $('wa-playlist');
+    if (!list) return;
+    let html = `<div class="wa-playlist-header">★ playlist · ${PLAYLIST.length} track${PLAYLIST.length===1?'':'s'} ★</div>`;
+    PLAYLIST.forEach((t, i) => {
+      const cls = (i === trackIdx) ? 'wa-playlist-row current' : 'wa-playlist-row';
+      const title = t.name.replace(/\.mp3$/i, '');
+      html += `<div class="${cls}" data-idx="${i}" title="${escape(title)}">` +
+              `<span class="pl-idx">${String(i+1).padStart(2,'0')}.</span>` +
+              `<span class="pl-title">${escape(title)}</span>` +
+              `<span class="pl-time">--:--</span>` +
+              `</div>`;
+    });
+    list.innerHTML = html;
+  }
+
+  // Click a track in the playlist to select it (and restart audio if playing).
+  function selectTrack(idx) {
+    if (idx < 0 || idx >= PLAYLIST.length || idx === trackIdx) {
+      // even if idx === trackIdx, still re-render (no-op for highlight)
+      if (idx >= 0 && idx < PLAYLIST.length) { trackIdx = idx; updateTrackTitle(); renderPlaylist(); }
+      return;
+    }
+    trackIdx = idx;
+    updateTrackTitle();
+    renderPlaylist();
+    if (isPlaying) { stopPlayback(); startPlayback(); }
+  }
+
   updateTrackTitle();
+  renderPlaylist();
+
+  // Toggle the playlist drawer when PL is clicked. Click a row to select.
+  $('wa-pl').addEventListener('click', () => {
+    document.getElementById('winamp').classList.toggle('show-playlist');
+  });
+  $('wa-playlist').addEventListener('click', (e) => {
+    const row = e.target.closest('.wa-playlist-row');
+    if (!row) return;
+    selectTrack(parseInt(row.dataset.idx, 10));
+  });
 
   // ----- Audio state -----
   let audioCtx = null;
@@ -2658,6 +2861,7 @@
   let analyserData = null;
   let mp3Audio = null;
   let mp3Source = null;
+  let currentMp3Url = null;
   let isPlaying = false;
   let isMuted = false;
   let playStartCtxTime = 0;   // ctx.currentTime when (re)started
@@ -2855,12 +3059,14 @@
     $('winamp').classList.add('live');
 
     if (MP3_URL) {
+      // Per-track URL with MP3_URL as fallback for any entry missing one.
+      const desiredUrl = currentTrack().url || MP3_URL;
       if (!mp3Audio) {
-        mp3Audio = new Audio(MP3_URL);
+        mp3Audio = new Audio(desiredUrl);
         mp3Audio.loop = true;
         // crossOrigin only set for explicit external URLs that have CORS headers.
         // Same-origin / relative paths must NOT set it (would break createMediaElementSource).
-        if (/^https?:\/\//i.test(MP3_URL)) {
+        if (/^https?:\/\//i.test(desiredUrl)) {
           mp3Audio.crossOrigin = 'anonymous';
         }
         try {
@@ -2871,6 +3077,14 @@
           // directly through <audio>, but no analyser/lofi filter routing.
           console.warn('mp3 playback bypassing Web Audio graph:', e.message);
         }
+        currentMp3Url = desiredUrl;
+      } else if (currentMp3Url !== desiredUrl) {
+        // Track changed since last play — swap the source on the same element so
+        // the existing MediaElementSource → masterGain wiring stays intact.
+        mp3Audio.pause();
+        mp3Audio.src = desiredUrl;
+        mp3Audio.load();
+        currentMp3Url = desiredUrl;
       }
       mp3Audio.play().catch((err) => {
         say(BOT, `*** could not start mp3 playback: ${err.message}. retry the ► button. ***`);
@@ -2887,7 +3101,7 @@
     masterGain.gain.linearRampToValueAtTime(isMuted ? 0 : 0.65, audioCtx.currentTime + 0.5);
 
     const t = currentTrack();
-    say(BOT, `*** now spinning :: ${t.artist} — ${t.name} :: ${t.meta} ***`);
+    say(BOT, `*** now spinning :: ${t.name} :: ${t.meta} ***`);
   }
 
   function pausePlayback() {
@@ -3147,7 +3361,7 @@
       const action = item.dataset.action;
       closeStartMenu();
       if (action === 'shutdown') {
-        doQuit('Shut Down...');
+        shutDown();
       } else if (action === 'run') {
         openRunDialog();
       } else {
@@ -3184,9 +3398,9 @@
     } else if (lower === 'iexplore' || lower === 'internet explorer') {
       restoreWindow('webportal', { flash: true });
     } else if (lower === 'cmd' || lower === 'command' || lower === 'command.com') {
-      notice('explorer', 'cmd is not installed on this system. try !help in #rjplaton instead.');
+      notice('explorer', 'cmd is not installed on this system. try /help in #rjplaton instead.');
     } else if (lower === 'shutdown' || lower === 'shutdown -s') {
-      doQuit('Shut Down...');
+      shutDown();
     } else if (v.startsWith('!') || v.startsWith('/')) {
       // forward to the IRC channel input
       restoreWindow('mirc');
@@ -3307,6 +3521,12 @@
   // mIRC and brings up the modern-client modal centered.)
 
   // ---------- Go ----------
+  // Add the visitor (guest) to the user list so they appear in the right rail
+  // and so /nick + /whois work against their entry.
+  NICKS.push({ n: YOU, role: 'normal', you: true });
+  // Stamp the input prompt with the guest nick (no @ — visitor is not an op)
+  const inputPromptNick = $('input-prompt-nick');
+  if (inputPromptNick) inputPromptNick.textContent = YOU;
   renderUserList();
   runBoot();
 
