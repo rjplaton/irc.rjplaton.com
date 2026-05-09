@@ -1479,6 +1479,13 @@
     padding: 0 24px;
   }
 
+  /* ---------- Shouting in chat ---------- */
+  /* mIRC's actual "look at me" formatting: bold + color code 8 (yellow). */
+  .shout {
+    font-weight: bold;
+    color: var(--mirc-yellow);
+  }
+
   /* ---------- Responsive: collapse user list on narrow ---------- */
   @media (max-width: 760px) {
     .userlist { display: none; }
@@ -1960,6 +1967,18 @@
     );
   }
 
+  // Shouted line — same anatomy as say() but the message portion gets the
+  // .shout treatment (bold, glowy, pulsing). Used to grab attention.
+  function shout(nick, text) {
+    const sigil = sigilFor(nick) || '';
+    const sigilHtml = sigil ? `<span style="color:var(--mirc-grey)">${sigil}</span>` : '';
+    append(
+      `<span class="ts">${ts()}</span> ` +
+      `<span class="ts">&lt;</span>${sigilHtml}${nickSpan(nick)}<span class="ts">&gt;</span> ` +
+      `<span class="shout">${escape(text)}</span>`
+    );
+  }
+
   // linkify after escape: safe because https URLs don't contain HTML-dangerous chars
   function linkify(escapedText) {
     return escapedText.replace(
@@ -2315,11 +2334,27 @@
     { delay: 350, fn: () => say(BOT, '*** rjp-net fserv online. type /list for releases, /rules first, /help for everything else.') },
     { delay: 400, fn: () => say(BOT, '*** tip: click any filename in chat to DCC it.') },
     { delay: 600, fn: () => action('rjplaton', 'cracks knuckles. welcome.') },
-    { delay: 1100, fn: () => say('rjplaton', `oh heads up ${YOU} -- it's not really me here, it's my AI clone rofl. real rjplaton is afk irl.`) },
-    { delay: 700, fn: () => say('rjplaton', `tour is in chat: try /whois rjplaton, /about, /projects, /resume, /contact, /now :)`) },
-    { delay: 800, fn: () => system(`rjplaton is now away — auto-away (afk irl)`) },
-    { delay: 100, fn: () => { startAmbient(); cmd.focus(); } }
+    { delay: 200, fn: () => { startAmbient(); cmd.focus(); } }
   ];
+
+  // rjplaton's AI-clone reveal arrives later — ambient chatter fills the
+  // gap so the visitor isn't flooded with scripted lines at load time.
+  setTimeout(() => {
+    say('rjplaton', `oh heads up ${YOU} -- it's not really me here, it's my AI clone rofl. real rjplaton is afk irl.`);
+    setTimeout(() => say('rjplaton', `tour is in chat: try /whois rjplaton, /about, /projects, /resume, /contact, /now :)`), 1100);
+    setTimeout(() => system(`rjplaton is now away — auto-away (afk irl)`), 1900);
+  }, 20000);
+
+  // On narrow viewports, a green-named regular shouts a rotate-phone nudge,
+  // and a normal user follows up 5s later. Decoupled from BOOT's cumulative
+  // chain so the timing is predictable.
+  if (typeof window !== 'undefined' && window.matchMedia &&
+      window.matchMedia('(max-width: 760px)').matches) {
+    setTimeout(() => {
+      shout('m1xt4pe', `>>> HEADS UP ${YOU} -- ON A PHONE? FLIP IT SIDEWAYS, THIS CHANNEL IS DESKTOP-CODED <<<`);
+      setTimeout(() => say('lana_57', `^ yeah this works best on desktop tbh`), 5000);
+    }, 8000);
+  }
 
   function motd() {
     pre(
